@@ -4,17 +4,13 @@ import ui.SplashScreen;
 import javax.swing.*;
 
 public class Main {
-    public static void main(String[] args){
-        //Show the splash screen
-        SplashScreen splash = new SplashScreen(3000);
-        splash.showSplash();
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            SplashScreen splash = new SplashScreen(3000);
+            splash.showSplash();
 
-        //Launch the main application window
-        javax.swing.swingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createAndShowGUI();
-            }
+            // Launch the main application window after splash screen
+            SwingUtilities.invokeLater(() -> createAndShowGUI());
         });
     }
 
@@ -23,3 +19,4 @@ public class Main {
         JFrame frame = new MainFrame("Tetris");
     }
 }
+
