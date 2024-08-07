@@ -1,4 +1,6 @@
 // Splash Screen like the load up screen that start the application
+// Used the tutorial in Canvas
+// Completed don't need to change
 
 package ui;
 
@@ -18,12 +20,12 @@ public class SplashScreen extends JWindow {
         content.setBackground(Color.white);
         content.setLayout(new BorderLayout());
 
-        // Load the image and get its dimensions
+        // Load the image and get its dimensions to make it fit the whole picture without having to have a background in
         ImageIcon splashImage = new ImageIcon("src/images/tetrisSplash.jpg");
         int width = splashImage.getIconWidth();
         int height = splashImage.getIconHeight();
 
-        // Setting the window bounds and centering
+        // Setting the window bounds as per the above size of the pic (not in canvas)
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - width) / 2;
         int y = (screen.height - height) / 2;
@@ -39,18 +41,12 @@ public class SplashScreen extends JWindow {
         // Display the splash screen
         setVisible(true);
 
-        // Use a Swing Timer to handle the splash screen duration
-        new Timer(duration, e -> {
-            setVisible(false);
-            ((Timer) e.getSource()).stop();
-            System.exit(0);
-        }).start();
-    }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            SplashScreen splash = new SplashScreen(3000);
-            splash.showSplash();
-        });
+        try {
+            Thread.sleep(duration);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        setVisible(false);
     }
 }

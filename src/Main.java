@@ -1,3 +1,5 @@
+//Completed don't need to change.
+
 import ui.MainFrame;
 import ui.SplashScreen;
 
@@ -5,12 +7,15 @@ import javax.swing.*;
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            SplashScreen splash = new SplashScreen(3000);
-            splash.showSplash();
+        // Show the splash screen
+        SplashScreen splash = new SplashScreen(500);
+        splash.showSplash();
 
-            // Launch the main application window after splash screen
-            SwingUtilities.invokeLater(() -> createAndShowGUI());
+        //Launch the main application window after splash screen
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
         });
     }
 
@@ -19,4 +24,3 @@ public class Main {
         JFrame frame = new MainFrame("Tetris");
     }
 }
-
