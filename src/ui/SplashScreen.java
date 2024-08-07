@@ -23,7 +23,7 @@ public class SplashScreen extends JWindow {
         int width = splashImage.getIconWidth();
         int height = splashImage.getIconHeight();
 
-        // Set the window bounds and center it
+        // Setting the window bounds and centering
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         int x = (screen.width - width) / 2;
         int y = (screen.height - height) / 2;
@@ -39,7 +39,7 @@ public class SplashScreen extends JWindow {
         // Display the splash screen
         setVisible(true);
 
-        // Use a Swing Timer to handle the splash screen duration without blocking the EDT
+        // Use a Swing Timer to handle the splash screen duration
         new Timer(duration, e -> {
             setVisible(false);
             ((Timer) e.getSource()).stop();
