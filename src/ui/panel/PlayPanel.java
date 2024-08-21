@@ -4,11 +4,13 @@ package ui.panel;
 
 import ui.MainFrame;
 import ui.UIGenerator;
+import model.Game;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class PlayPanel extends JPanel {
+
 
     public PlayPanel(){
         // Have to set the layout so I know what type of Layout it is for me to put things places.
@@ -19,6 +21,8 @@ public class PlayPanel extends JPanel {
 
         BorderLayout layout = new BorderLayout();
 
+        Game game = new Game();
+        add(game, BorderLayout.CENTER);
 
         //Created the title Page
         JLabel titleLabel = new JLabel("Play");
@@ -40,4 +44,5 @@ public class PlayPanel extends JPanel {
         add(configureButton, BorderLayout.SOUTH);
 
     }
+
 }
