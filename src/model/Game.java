@@ -3,6 +3,8 @@
 package model;
 
 
+import ui.panel.PlayPanel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,7 +18,7 @@ public class Game extends JPanel implements ActionListener {
     private final int BOARD_HEIGHT = 20;
     private final Timer timer;
     private boolean isFallingFinished = false;
-    private boolean isStarted = false;
+    private boolean isStarted = true;
     private boolean isPaused = false;
     private int curX = 0;
     private int curY = 0;
@@ -24,6 +26,7 @@ public class Game extends JPanel implements ActionListener {
     private TetrisShape curPiece;
     private TetrisShape.Shape[] board;
     private Score scorePanel;
+    private String pauseMessage = "";
 
     public Game() {
         setFocusable(true);
@@ -111,13 +114,14 @@ public class Game extends JPanel implements ActionListener {
             return;
         }
 
-        isPaused = !isPaused;  // Toggle the pause state
+        isPaused = !isPaused;
         if (isPaused) {
-            timer.stop();  // Stop the game timer, effectively pausing the game
+            timer.stop();
+            repaint();
         } else {
-            timer.start();  // Restart the game timer, resuming the game
+            timer.start();
+            repaint();// Restart the game timer, resuming the game
         }
-        repaint();  // Repaint the game panel to reflect any changes
     }
 
 
@@ -145,6 +149,13 @@ public class Game extends JPanel implements ActionListener {
             curPiece.setShape(TetrisShape.Shape.NoShape);
             timer.stop();
             isStarted = false;
+            notifyGameOver();
+        }
+    }
+
+    private void notifyGameOver() {
+        if (getParent() instanceof PlayPanel) {
+            ((PlayPanel) getParent()).setGameFinished(true);
         }
     }
 
@@ -228,6 +239,10 @@ public class Game extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        if (isPaused){
+            return;
+        }
+
         if (isFallingFinished) {
             isFallingFinished = false;
             newPiece();
@@ -240,11 +255,23 @@ public class Game extends JPanel implements ActionListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         doDrawing(g);
-    }
+
+        }
+
 
     private void doDrawing(Graphics g) {
         Dimension size = getSize();
         int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
+
+        if (isPaused){
+            g.setColor(Color.BLACK);
+            g.setFont(new Font("Arial", Font.PLAIN, 20));
+            FontMetrics fm = g.getFontMetrics();
+            pauseMessage = "Paused, Press P to Unpause";
+            int x = (getWidth() - fm.stringWidth(pauseMessage)) / 2;
+            int y = getHeight() / 2;
+            g.drawString(pauseMessage, x, y);
+        }
 
         for (int i = 0; i < BOARD_HEIGHT; i++) {
             for (int j = 0; j < BOARD_WIDTH; j++) {
@@ -299,7 +326,5 @@ public class Game extends JPanel implements ActionListener {
     private int squareHeight() {
         return (int) getSize().getHeight() / BOARD_HEIGHT;
     }
-
-
 
 }
