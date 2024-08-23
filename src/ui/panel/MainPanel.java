@@ -10,10 +10,11 @@ import ui.MainFrame;
 import ui.UIGenerator;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 
 public class MainPanel extends JPanel {
+
+    //private JButton exitButton;
 
     public MainPanel() {
         // Placing a border around the panel, so I can see where everything fits. Can remove afterward
@@ -26,7 +27,7 @@ public class MainPanel extends JPanel {
 
         // Create a JLabel panel for the title
         JLabel titleLabel = new JLabel("Tetris");
-        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD,  100));
+        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 100));
         // Placed a border around the title to see where the panel is. Can remove afterward
         titleLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
         add(titleLabel, gbc);
@@ -71,10 +72,16 @@ public class MainPanel extends JPanel {
             frame.showPanel("HighScorePanel");
         });
 
-        // Made the "Exit" button - Works
+        // Made the "Exit" button - Asks the user to exit the game or not
         JButton exitButton = UIGenerator.createButton("Exit", buttonSize, buttonBorderColor);
         exitButton.addActionListener(e -> {
-            System.exit(0);
+            int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
+            if (option == JOptionPane.YES_OPTION) {
+                System.exit(0);
+            } else if (option == JOptionPane.NO_OPTION) {
+                MainFrame frame = (MainFrame) SwingUtilities.getWindowAncestor(this);
+                frame.showPanel("MainPanel");
+            }
         });
 
         buttons.add(playButton, buttonConstraints);
