@@ -27,7 +27,7 @@ public class PlayPanel extends JPanel {
 
         BorderLayout layout = new BorderLayout();
 
-        Game game = new Game();
+        game = new Game();
         add(game, BorderLayout.CENTER);
 
         //Created the title Page
@@ -55,10 +55,15 @@ public class PlayPanel extends JPanel {
     private void handleBackButtonClick() {
         if (isGameFinished) {
             navigateToMainMenu();
-        } else if (isPaused) {
+        } else if (!isPaused) {
+            game.pause();
+            isPaused = true;
             int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 navigateToMainMenu();
+            } else {
+                game.start();
+                isPaused = false;
             }
         } else {
             int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);

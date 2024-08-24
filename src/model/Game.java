@@ -109,7 +109,7 @@ public class Game extends JPanel implements ActionListener {
         pieceDropped();  // After dropping, the piece is set in place, and the new piece is generated
     }
 
-    private void pause() {
+    public void pause() {
         if (!isStarted) {
             return;
         }
