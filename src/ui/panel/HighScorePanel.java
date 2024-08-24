@@ -15,9 +15,6 @@ public class HighScorePanel extends JPanel {
         // Have to set the layout so I know what type of Layout it is for me to put things places.
         setLayout(new BorderLayout());
 
-        //Setting the border so i know what it is
-        setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
-
         BorderLayout layout = new BorderLayout();
 
 

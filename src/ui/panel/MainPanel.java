@@ -17,8 +17,6 @@ public class MainPanel extends JPanel {
     //private JButton exitButton;
 
     public MainPanel() {
-        // Placing a border around the panel, so I can see where everything fits. Can remove afterward
-        setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
 
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -28,8 +26,6 @@ public class MainPanel extends JPanel {
         // Create a JLabel panel for the title
         JLabel titleLabel = new JLabel("Tetris");
         titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 100));
-        // Placed a border around the title to see where the panel is. Can remove afterward
-        titleLabel.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
         add(titleLabel, gbc);
 
         // Adding vertical space between the title and the buttons
@@ -40,8 +36,6 @@ public class MainPanel extends JPanel {
 
         // Create a JPanel for the buttons to sit on.
         JPanel buttons = new JPanel(new GridBagLayout());
-        // Placed a border around the button panel to see where the panel is. Can remove afterward
-        buttons.setBorder(BorderFactory.createLineBorder(Color.BLUE, 5));
         GridBagConstraints buttonConstraints = new GridBagConstraints();
         buttonConstraints.gridwidth = GridBagConstraints.REMAINDER;
         buttonConstraints.fill = GridBagConstraints.HORIZONTAL;
