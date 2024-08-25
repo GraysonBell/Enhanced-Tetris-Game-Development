@@ -1,5 +1,3 @@
-// Panel where the user interacts with the Game (gameplay area)
-
 package ui.panel;
 
 import ui.MainFrame;
@@ -18,26 +16,17 @@ public class PlayPanel extends JPanel {
     private boolean isGameFinished = false;
     private boolean isPaused = false;
 
-    public PlayPanel(){
-        // Have to set the layout so I know what type of Layout it is for me to put things places.
+    public PlayPanel() {
         setLayout(new BorderLayout());
 
-        //Setting the border so i know what it is
-        setBorder(BorderFactory.createLineBorder(Color.GREEN, 5));
-
-        BorderLayout layout = new BorderLayout();
-
-        game = new Game();
+        game = new Game();  // Initialize the Game instance, but do not start it
         add(game, BorderLayout.CENTER);
 
-        //Created the title Page
         JLabel titleLabel = new JLabel("Play");
-        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN,  25));
+        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 25));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-
-        // Created the Back Button
         Dimension buttonSize = new Dimension(200, 40);
         Color buttonBorderColor = Color.BLACK;
         backButton = UIGenerator.createButton("Back", buttonSize, buttonBorderColor);
@@ -52,23 +41,24 @@ public class PlayPanel extends JPanel {
         add(backButton, BorderLayout.SOUTH);
     }
 
+    public void startGame() {
+        game.start(); // Start the game when this method is called
+    }
+
     private void handleBackButtonClick() {
         if (isGameFinished) {
             navigateToMainMenu();
-        } else if (!isPaused) {
-            game.pause();
-            isPaused = true;
+        } else {
+            if (!isPaused) {
+                game.pause(); // Pause the game
+                isPaused = true;
+            }
             int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 navigateToMainMenu();
             } else {
-                game.start();
+                game.resume(); // Resume the game
                 isPaused = false;
-            }
-        } else {
-            int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.YES_OPTION) {
-                navigateToMainMenu();
             }
         }
     }
