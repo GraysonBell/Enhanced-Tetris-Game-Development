@@ -8,7 +8,7 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         // Show the splash screen
-        SplashScreen splash = new SplashScreen(500);
+        SplashScreen splash = new SplashScreen(5000);
         splash.showSplash();
 
         //Launch the main application window after splash screen

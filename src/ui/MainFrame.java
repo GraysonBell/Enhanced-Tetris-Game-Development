@@ -1,5 +1,3 @@
-//The main app window that contains all the different panels and the navigation between them.
-
 package ui;
 
 import ui.panel.ConfigurePanel;
@@ -14,22 +12,17 @@ public class MainFrame extends JFrame {
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
+    private PlayPanel playPanel; // Add a reference to PlayPanel
+
     public MainFrame(String title) {
-
-
-        // Title of the Frame
         setTitle(title);
-
-        // Close operation
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Set the layout manager
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Create and add the main panel
+        // Create and add panels
         MainPanel mainPanel = new MainPanel();
-        PlayPanel playPanel = new PlayPanel();
+        playPanel = new PlayPanel(); // Initialize PlayPanel
         ConfigurePanel configurePanel = new ConfigurePanel();
         HighScorePanel highScorePanel = new HighScorePanel();
 
@@ -39,19 +32,17 @@ public class MainFrame extends JFrame {
         cardPanel.add(highScorePanel, "HighScorePanel");
 
         getContentPane().add(cardPanel, BorderLayout.CENTER);
-
-        // Set the size of the frame
         setSize(750, 850);
-
-        // Center the frame on the screen
         setLocationRelativeTo(null);
-
-        // Make the frame visible
         setVisible(true);
     }
 
     public void showPanel(String panelName) {
         cardLayout.show(cardPanel, panelName);
-    }
 
+        // Start the game if the panel being shown is PlayPanel
+        if ("PlayPanel".equals(panelName)) {
+            playPanel.startGame(); // Start the game when switching to PlayPanel
+        }
+    }
 }

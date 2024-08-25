@@ -41,7 +41,7 @@ public class Game extends JPanel implements ActionListener {
 
         scorePanel = new Score();
         setLayout(new BorderLayout());
-        add(scorePanel, BorderLayout.EAST); // Add the score panel
+//        add(scorePanel, BorderLayout.EAST); // Add the score panel
     }
 
 
@@ -124,6 +124,11 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
+    public void resume() {
+        // Resume the game logic
+        timer.start();
+        isPaused = false;
+    }
 
     public void start() {
         isStarted = true;
