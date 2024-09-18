@@ -5,20 +5,13 @@ package model;
 
 import ui.panel.PlayPanel;
 
-import java.io.File;
-
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
-import javax.sound.sampled.Clip;
-import java.io.IOException;
+import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.IOException;
 
 
 public class Game extends JPanel implements ActionListener {
@@ -52,17 +45,31 @@ public class Game extends JPanel implements ActionListener {
 
         scorePanel = new Score();
         setLayout(new BorderLayout());
-    //  add(scorePanel, BorderLayout.EAST); // Add the score panel
+        //  add(scorePanel, BorderLayout.EAST); // Add the score panel
     }
 
     // Music and sound effects
     public class SoundHandler {
-
         private static boolean isMusicOn = true;
         private static boolean isSoundOn = true;
+        private static Clip musicClip;
 
         public static void setMusicOn(boolean on) {
             isMusicOn = on;
+            if (musicClip != null) {
+                if (!isMusicOn) {
+                    musicClip.stop();
+                    musicClip.close();
+                } else {
+                    try {
+                        musicClip.setFramePosition(0);
+                        musicClip.start();
+                        musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
 
         public static void setSoundOn(boolean on) {
@@ -70,12 +77,18 @@ public class Game extends JPanel implements ActionListener {
         }
 
         public static void RunMusic(String path) {
-            if (!isMusicOn) return;
             try {
+                if (musicClip != null) {
+                    musicClip.stop();
+                    musicClip.close();
+                }
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
-                Clip clip = AudioSystem.getClip();
-                clip.open(inputStream);
-                clip.loop(100);
+                musicClip = AudioSystem.getClip();
+                musicClip.open(inputStream);
+                if (isMusicOn) {
+                    musicClip.start();
+                    musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                }
             } catch (UnsupportedAudioFileException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -85,7 +98,7 @@ public class Game extends JPanel implements ActionListener {
             }
         }
 
-        public static void BlockPlace (String path) {
+        public static void BlockPlace(String path) {
             if (!isSoundOn) return;
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
@@ -100,7 +113,8 @@ public class Game extends JPanel implements ActionListener {
                 e.printStackTrace();
             }
         }
-        public static void SplashMusic (String path) {
+
+        public static void SplashMusic(String path) {
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
                 Clip clip = AudioSystem.getClip();
@@ -114,7 +128,8 @@ public class Game extends JPanel implements ActionListener {
                 e.printStackTrace();
             }
         }
-        public static void ClearedLineSound (String path) {
+
+        public static void ClearedLineSound(String path) {
             if (!isSoundOn) return;
             try {
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
@@ -175,7 +190,7 @@ public class Game extends JPanel implements ActionListener {
             }
         });
 
-        inputMap.put(KeyStroke.getKeyStroke("P"), "pause"); // Pause Game(Not working yet)
+        inputMap.put(KeyStroke.getKeyStroke("P"), "pause"); // Pause Game
         actionMap.put("pause", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -208,7 +223,8 @@ public class Game extends JPanel implements ActionListener {
             }
             newY--;
         }
-        pieceDropped(); {
+        pieceDropped();
+        {
             Game.SoundHandler.BlockPlace("src/sounds/hitmarker.wav");
             // After dropping, the piece is set in place, and the new piece is generated
         }
@@ -217,7 +233,7 @@ public class Game extends JPanel implements ActionListener {
     private void musicToggle() {
         isMusicOn = !isMusicOn;
         SoundHandler.setMusicOn(isMusicOn);
-        // have to fix loop count for music
+        System.out.println("Music toggled: " + (isMusicOn ? "ON" : "OFF"));
     }
 
     private void soundToggle() {
@@ -253,6 +269,7 @@ public class Game extends JPanel implements ActionListener {
         newPiece();
         requestFocusInWindow();
         timer.start();
+        SoundHandler.RunMusic("src/sounds/753603__zanderhud__pss560-slow-rock-and-bass-auto-rhythm.wav");
     }
 
     private void clearBoard() {
@@ -361,7 +378,7 @@ public class Game extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (isPaused){
+        if (isPaused) {
             return;
         }
 
@@ -378,14 +395,14 @@ public class Game extends JPanel implements ActionListener {
         super.paintComponent(g);
         doDrawing(g);
 
-        }
+    }
 
 
     private void doDrawing(Graphics g) {
         Dimension size = getSize();
         int boardTop = (int) size.getHeight() - BOARD_HEIGHT * squareHeight();
 
-        if (isPaused){
+        if (isPaused) {
             g.setColor(Color.BLACK);
             g.setFont(new Font("Arial", Font.PLAIN, 20));
             FontMetrics fm = g.getFontMetrics();
