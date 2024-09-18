@@ -5,12 +5,21 @@ package model;
 
 import ui.panel.PlayPanel;
 
+import java.io.File;
+
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.sound.sampled.Clip;
+import java.io.IOException;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 
 public class Game extends JPanel implements ActionListener {
 
@@ -27,6 +36,8 @@ public class Game extends JPanel implements ActionListener {
     private TetrisShape.Shape[] board;
     private Score scorePanel;
     private String pauseMessage = "";
+    private boolean isMusicOn = true;
+    private boolean isSoundOn = true;
 
     public Game() {
         setFocusable(true);
@@ -41,9 +52,84 @@ public class Game extends JPanel implements ActionListener {
 
         scorePanel = new Score();
         setLayout(new BorderLayout());
-//        add(scorePanel, BorderLayout.EAST); // Add the score panel
+    //  add(scorePanel, BorderLayout.EAST); // Add the score panel
     }
 
+    // Music and sound effects
+    public class SoundHandler {
+
+        private static boolean isMusicOn = true;
+        private static boolean isSoundOn = true;
+
+        public static void setMusicOn(boolean on) {
+            isMusicOn = on;
+        }
+
+        public static void setSoundOn(boolean on) {
+            isSoundOn = on;
+        }
+
+        public static void RunMusic(String path) {
+            if (!isMusicOn) return;
+            try {
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
+                Clip clip = AudioSystem.getClip();
+                clip.open(inputStream);
+                clip.loop(100);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public static void BlockPlace (String path) {
+            if (!isSoundOn) return;
+            try {
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
+                Clip clip = AudioSystem.getClip();
+                clip.open(inputStream);
+                clip.loop(0);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        public static void SplashMusic (String path) {
+            try {
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
+                Clip clip = AudioSystem.getClip();
+                clip.open(inputStream);
+                clip.loop(0);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+        public static void ClearedLineSound (String path) {
+            if (!isSoundOn) return;
+            try {
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(path));
+                Clip clip = AudioSystem.getClip();
+                clip.open(inputStream);
+                clip.loop(0);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (LineUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     private void setupKeyBindings() {
         InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
@@ -96,6 +182,22 @@ public class Game extends JPanel implements ActionListener {
                 pause();
             }
         });
+
+        inputMap.put(KeyStroke.getKeyStroke("M"), "music"); // toggles music on/off
+        actionMap.put("muisc", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                musicToggle();
+            }
+        });
+
+        inputMap.put(KeyStroke.getKeyStroke("S"), "sounds"); // toggles sound effects on/off
+        actionMap.put("sounds", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                soundToggle();
+            }
+        });
     }
 
     private void dropDown() {
@@ -106,7 +208,21 @@ public class Game extends JPanel implements ActionListener {
             }
             newY--;
         }
-        pieceDropped();  // After dropping, the piece is set in place, and the new piece is generated
+        pieceDropped(); {
+            Game.SoundHandler.BlockPlace("src/sounds/hitmarker.wav");
+            // After dropping, the piece is set in place, and the new piece is generated
+        }
+    }
+
+    private void musicToggle() {
+        isMusicOn = !isMusicOn;
+        SoundHandler.setMusicOn(isMusicOn);
+        // have to fix loop count for music
+    }
+
+    private void soundToggle() {
+        isSoundOn = !isSoundOn;
+        SoundHandler.setSoundOn(isSoundOn);
     }
 
     public void pause() {
@@ -239,6 +355,7 @@ public class Game extends JPanel implements ActionListener {
             isFallingFinished = true;
             curPiece.setShape(TetrisShape.Shape.NoShape);
             repaint();
+            Game.SoundHandler.ClearedLineSound("src/sounds/vs-anime-sound-10.wav");
         }
     }
 
@@ -333,3 +450,4 @@ public class Game extends JPanel implements ActionListener {
     }
 
 }
+
