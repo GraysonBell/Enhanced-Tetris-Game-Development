@@ -1,5 +1,6 @@
 package ui;
 
+import model.Game;
 import ui.panel.ConfigurePanel;
 import ui.panel.HighScorePanel;
 import ui.panel.MainPanel;
@@ -35,6 +36,9 @@ public class MainFrame extends JFrame {
         setSize(750, 850);
         setLocationRelativeTo(null);
         setVisible(true);
+
+        Game.SoundHandler.RunMusic("src/sounds/753603__zanderhud__pss560-slow-rock-and-bass-auto-rhythm.wav");
+
     }
 
     public void showPanel(String panelName) {

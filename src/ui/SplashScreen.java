@@ -4,8 +4,11 @@
 
 package ui;
 
+import model.Game;
+
 import javax.swing.*;
 import java.awt.*;
+
 
 public class SplashScreen extends JWindow {
 
@@ -16,6 +19,7 @@ public class SplashScreen extends JWindow {
     }
 
     public void showSplash() {
+        Game.SoundHandler.SplashMusic("src/sounds/jungle-ring.wav");
         JPanel content = (JPanel) getContentPane();
         content.setBackground(Color.white);
         content.setLayout(new BorderLayout());
@@ -41,7 +45,6 @@ public class SplashScreen extends JWindow {
         // Display the splash screen
         setVisible(true);
 
-
         try {
             Thread.sleep(duration);
         } catch (Exception e) {
@@ -50,3 +53,5 @@ public class SplashScreen extends JWindow {
         setVisible(false);
     }
 }
+
+

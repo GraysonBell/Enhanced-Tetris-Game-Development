@@ -1,5 +1,6 @@
 //Completed don't need to change.
 
+import model.Game;
 import ui.MainFrame;
 import ui.SplashScreen;
 
