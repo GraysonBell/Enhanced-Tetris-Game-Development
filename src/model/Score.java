@@ -8,26 +8,29 @@ import java.awt.*;
 
 public class Score extends JPanel {
 
-    private int linesCleared;
-    private int score;
+    // Labels for the game score, level etc information
 
     private JLabel scoreLabel;
     private JLabel linesLabel;
+    private int linesCleared;
+    private int score;
 
     public Score() {
-        setLayout(new GridLayout(2, 1));
+        setLayout(new GridLayout(0, 1));
 
         linesCleared = 0;
         score = 0;
 
         // Initialize the labels
-        scoreLabel = new JLabel("Score: 0", JLabel.CENTER);
-        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 18));
 
-        linesLabel = new JLabel("Lines Cleared: 0", JLabel.CENTER);
-        linesLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 18));
+        scoreLabel = new JLabel("Score: " + score, JLabel.CENTER);
+        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 20));
+
+        linesLabel = new JLabel("Lines Cleared: " + linesCleared, JLabel.CENTER);
+        linesLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 16));
 
         // Add labels to the panel
+
         add(scoreLabel);
         add(linesLabel);
 
@@ -67,8 +70,8 @@ public class Score extends JPanel {
         score = 0;
 
         // Reset the labels
-        scoreLabel.setText("Score: 0");
-        linesLabel.setText("Lines Cleared: 0");
+        scoreLabel.setText("Score: " + score);
+        linesLabel.setText("Lines Cleared: " + score);
     }
 
     // Getters for score and lines cleared
