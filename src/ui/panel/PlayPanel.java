@@ -55,6 +55,7 @@ public class PlayPanel extends JPanel {
         add(backButton, BorderLayout.SOUTH);
 
         // Box to display the current game stats.
+
         JPanel gameStatusDisplay = new JPanel();
         gameStatusDisplay.setLayout(new GridLayout(0, 1));
         gameStatusDisplay.setBorder(new LineBorder(Color.BLACK, 1));
@@ -87,6 +88,14 @@ public class PlayPanel extends JPanel {
         gameStatusDisplay.add(scoreLabel);
         gameStatusDisplay.add(linesLabel);
         gameStatusDisplay.add(nextTetrominoLabel);
+
+        // Box showing next Tetromino
+
+        JPanel nextTetrominoBox = new JPanel();
+        nextTetrominoBox.setBorder(new ShadowBorder(Color.GRAY, Color.WHITE, 2));
+        nextTetrominoBox.setPreferredSize(new Dimension(60, 40));
+
+        gameStatusDisplay.add(nextTetrominoBox);
 
         add(gameStatusDisplay, BorderLayout.WEST);
 
