@@ -15,5 +15,12 @@ public class UIGenerator {
         return button;
     }
 
+    public static JLabel createHeaderLabel(String txt) {
+        JLabel lb = new JLabel(txt);
+        lb.setFont(new Font("Arial", 1, 14));
+        lb.setHorizontalAlignment(0);
+        return lb;
+    }
+
 
 }
