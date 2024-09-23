@@ -66,10 +66,10 @@ public class PlayPanel extends JPanel {
         playerTypeLabel = new JLabel("Player type: Human", JLabel.CENTER);
         playerTypeLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        initialLevel = new JLabel("Initial level: 1", JLabel.CENTER);
+        initialLevel = new JLabel("Initial level: ", JLabel.CENTER);
         initialLevel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        currentLevel = new JLabel("Current level: 1", JLabel.CENTER);
+        currentLevel = new JLabel("Current level: ", JLabel.CENTER);
         currentLevel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
         scoreLabel = new JLabel("Score: ", JLabel.CENTER);
@@ -117,6 +117,7 @@ public class PlayPanel extends JPanel {
             }
             int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
+                highScoreEnterName();
                 navigateToMainMenu();
             } else {
                 game.resume(); // Resume the game
@@ -136,5 +137,23 @@ public class PlayPanel extends JPanel {
 
     public void setPaused(boolean paused) {
         isPaused = paused;
+    }
+
+    private void highScoreEnterName()
+    {
+        String playerName = JOptionPane.showInputDialog(this, "Player 1's score is in the top scores, please enter player 1's name:", "High Score", JOptionPane.PLAIN_MESSAGE);
+
+        if (playerName != null && !playerName.trim().isEmpty()) {
+            saveScore(playerName);
+        }
+        else {
+            JOptionPane.showMessageDialog(this, "No name entered. Score won't be saved.", "Information", JOptionPane.INFORMATION_MESSAGE);
+        }
+
+        navigateToMainMenu();
+    }
+
+    private void saveScore(String playerName) {
+        System.out.println("Score saved for player:" + playerName);
     }
 }

@@ -12,6 +12,7 @@ public class Score extends JPanel {
 
     private JLabel scoreLabel;
     private JLabel linesLabel;
+
     private int linesCleared;
     private int score;
 
@@ -82,4 +83,5 @@ public class Score extends JPanel {
     public int getLinesCleared() {
         return linesCleared;
     }
+
 }
