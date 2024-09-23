@@ -45,7 +45,7 @@ public class Game extends JPanel implements ActionListener {
 
         scorePanel = new Score();
         setLayout(new BorderLayout());
-        //  add(scorePanel, BorderLayout.EAST); // Add the score panel
+        //add(scorePanel, BorderLayout.EAST); // Add the score panel
     }
 
     // Music and sound effects
