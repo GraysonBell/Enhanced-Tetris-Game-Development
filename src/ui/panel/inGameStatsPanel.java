@@ -7,6 +7,8 @@ import model.Score;
 
 public class inGameStatsPanel extends JPanel {
 
+    private Score score;
+
     private JLabel gameInfo;
     private JLabel playerTypeLabel;
     private JLabel initialLevelLabel;
@@ -17,6 +19,7 @@ public class inGameStatsPanel extends JPanel {
 
     public inGameStatsPanel() {
         setLayout(new BorderLayout());
+        score = new Score();
 
         JPanel gameStatusDisplay = new JPanel();
         gameStatusDisplay.setLayout(new GridLayout(0, 1));
@@ -34,11 +37,13 @@ public class inGameStatsPanel extends JPanel {
         currentLevelLabel = new JLabel("Current level: ", JLabel.CENTER);
         currentLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        scoreLabel = new JLabel("Score: ", JLabel.CENTER);
+        scoreLabel = new JLabel("Score: " + Score.getScore(), JLabel.CENTER);
         scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 18));
+        Score.addObserver(scoreLabel);
 
-        linesLabel = new JLabel("Lines Cleared: ", JLabel.CENTER);
+        linesLabel = new JLabel("Lines Cleared: " + Score.getLinesCleared(), JLabel.CENTER);
         linesLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+        Score.addObserver(linesLabel);
 
         nextTetrominoLabel = new JLabel("Next Tetromino:", JLabel.CENTER);
         nextTetrominoLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));

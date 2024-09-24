@@ -1,4 +1,4 @@
-// A record that probably represents a players score. a Record class makes things immutable.
+// This class calculates the score and lines cleared data.
 
 package model;
 
@@ -6,39 +6,40 @@ import ui.panel.PlayPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Score extends JPanel {
 
-    // Labels for the game score, level etc information
+    private static int linesCleared;
+    private static int score;
 
-    private JLabel scoreLabel;
-    private JLabel linesLabel;
+    private static final ArrayList<JComponent> observers = new ArrayList<>();
 
-    private int linesCleared;
-    private int score;
+    public static void addObserver(JComponent comp) {observers.add(comp); }
+
+    public static void clearObservers() {observers.clear(); }
+
+    public static void informObservers() {
+        for (JComponent observer : observers) {
+            if (observer instanceof JLabel) {
+                JLabel label = (JLabel) observer;
+                if (label.getText().startsWith("Score:")) {
+                    label.setText("Score: " + getScore());
+                } else if (label.getText().startsWith("Lines Cleared:")) {
+                    label.setText("Lines Cleared: " + getLinesCleared());
+                }
+            }
+            observer.repaint();
+
+        }
+
+    }
 
     public Score() {
-
-        setLayout(new GridLayout(0, 1));
 
         linesCleared = 0;
         score = 0;
 
-        // Initialize the labels
-
-        scoreLabel = new JLabel("Score: " + score, JLabel.CENTER);
-        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 20));
-
-        linesLabel = new JLabel("Lines Cleared: " + linesCleared, JLabel.CENTER);
-        linesLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 16));
-
-        // Add labels to the panel
-
-        add(scoreLabel);
-        add(linesLabel);
-
-        // Set panel border
-        setOpaque(false);
     }
 
     // Method to update the score based on the number of lines cleared at once
@@ -62,9 +63,7 @@ public class Score extends JPanel {
 
         linesCleared += lines;
 
-        // Update the labels with the new score and lines cleared
-        scoreLabel.setText("Score: " + score);
-        linesLabel.setText("Lines Cleared: " + linesCleared);
+        Score.informObservers();
 
     }
 
@@ -72,18 +71,14 @@ public class Score extends JPanel {
     public void reset() {
         linesCleared = 0;
         score = 0;
-
-        // Reset the labels
-        scoreLabel.setText("Score: " + score);
-        linesLabel.setText("Lines Cleared: " + score);
     }
 
     // Getters for score and lines cleared
-    public int getScore() {
+    public static int getScore() {
         return score;
     }
 
-    public int getLinesCleared() {
+    public static int getLinesCleared() {
         return linesCleared;
     }
 

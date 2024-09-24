@@ -19,22 +19,12 @@ public class PlayPanel extends JPanel {
     private boolean isGameFinished = false;
     private boolean isPaused = false;
 
-    // Labels for the score and display in game
-
-    private JLabel gameInfo;
-    private JLabel playerTypeLabel;
-    private JLabel initialLevelLabel;
-    private JLabel currentLevelLabel;
-    private JLabel nextTetrominoLabel;
-    private JLabel scoreLabel;
-    private JLabel linesLabel;
 
     public PlayPanel() {
         setLayout(new BorderLayout());
 
         game = new Game();  // Initialize the Game instance, but do not start it
         add(game, BorderLayout.CENTER);
-        //score = new Score();
 
         JLabel titleLabel = new JLabel("Play");
         titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 25));
