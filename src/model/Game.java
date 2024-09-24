@@ -28,6 +28,7 @@ public class Game extends JPanel implements ActionListener {
     private TetrisShape curPiece;
     private TetrisShape.Shape[] board;
     private Score scorePanel;
+    private PlayPanel playPanel;
     private String pauseMessage = "";
     private boolean isMusicOn = true;
     private boolean isSoundOn = true;
@@ -45,7 +46,7 @@ public class Game extends JPanel implements ActionListener {
 
         scorePanel = new Score();
         setLayout(new BorderLayout());
-        //add(scorePanel, BorderLayout.EAST); // Add the score panel
+        add(scorePanel, BorderLayout.EAST); // Add the score panel
     }
 
     // Music and sound effects

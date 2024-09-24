@@ -2,6 +2,7 @@
 
 package model;
 
+import ui.panel.PlayPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ public class Score extends JPanel {
     private int score;
 
     public Score() {
+
         setLayout(new GridLayout(0, 1));
 
         linesCleared = 0;
@@ -63,6 +65,7 @@ public class Score extends JPanel {
         // Update the labels with the new score and lines cleared
         scoreLabel.setText("Score: " + score);
         linesLabel.setText("Lines Cleared: " + linesCleared);
+
     }
 
     // Method to reset the score and lines cleared

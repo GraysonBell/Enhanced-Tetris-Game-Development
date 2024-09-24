@@ -3,7 +3,6 @@ package ui.panel;
 import ui.MainFrame;
 import ui.UIGenerator;
 import model.Game;
-import model.Score;
 
 import javax.sound.sampled.Line;
 import javax.swing.*;
@@ -15,7 +14,7 @@ import java.awt.event.ActionListener;
 public class PlayPanel extends JPanel {
 
     private Game game;
-    private Score score;
+    private inGameStatsPanel gamestats;
     private JButton backButton;
     private boolean isGameFinished = false;
     private boolean isPaused = false;
@@ -24,8 +23,8 @@ public class PlayPanel extends JPanel {
 
     private JLabel gameInfo;
     private JLabel playerTypeLabel;
-    private JLabel initialLevel;
-    private JLabel currentLevel;
+    private JLabel initialLevelLabel;
+    private JLabel currentLevelLabel;
     private JLabel nextTetrominoLabel;
     private JLabel scoreLabel;
     private JLabel linesLabel;
@@ -35,11 +34,17 @@ public class PlayPanel extends JPanel {
 
         game = new Game();  // Initialize the Game instance, but do not start it
         add(game, BorderLayout.CENTER);
+        //score = new Score();
 
         JLabel titleLabel = new JLabel("Play");
         titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 25));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
+
+
+        //Implements the game stats display
+        gamestats = new inGameStatsPanel();
+        add(gamestats, BorderLayout.WEST);
 
         Dimension buttonSize = new Dimension(200, 40);
         Color buttonBorderColor = Color.BLACK;
@@ -54,51 +59,6 @@ public class PlayPanel extends JPanel {
 
         add(backButton, BorderLayout.SOUTH);
 
-        // Box to display the current game stats.
-
-        JPanel gameStatusDisplay = new JPanel();
-        gameStatusDisplay.setLayout(new GridLayout(0, 1));
-        gameStatusDisplay.setBorder(new LineBorder(Color.BLACK, 1));
-
-        gameInfo = new JLabel("Game Info (Player 1)", JLabel.CENTER);
-        gameInfo.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        playerTypeLabel = new JLabel("Player type: Human", JLabel.CENTER);
-        playerTypeLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        initialLevel = new JLabel("Initial level: ", JLabel.CENTER);
-        initialLevel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        currentLevel = new JLabel("Current level: ", JLabel.CENTER);
-        currentLevel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        scoreLabel = new JLabel("Score: ", JLabel.CENTER);
-        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 18));
-
-        linesLabel = new JLabel("Lines Cleared: ", JLabel.CENTER);
-        linesLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        nextTetrominoLabel = new JLabel("Next Tetromino:", JLabel.CENTER);
-        nextTetrominoLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
-        gameStatusDisplay.add(gameInfo);
-        gameStatusDisplay.add(playerTypeLabel);
-        gameStatusDisplay.add(initialLevel);
-        gameStatusDisplay.add(currentLevel);
-        gameStatusDisplay.add(scoreLabel);
-        gameStatusDisplay.add(linesLabel);
-        gameStatusDisplay.add(nextTetrominoLabel);
-
-        // Box showing next Tetromino
-
-        JPanel nextTetrominoBox = new JPanel();
-        nextTetrominoBox.setBorder(new ShadowBorder(Color.GRAY, Color.WHITE, 2));
-        nextTetrominoBox.setPreferredSize(new Dimension(60, 40));
-
-        gameStatusDisplay.add(nextTetrominoBox);
-
-        add(gameStatusDisplay, BorderLayout.WEST);
-
     }
 
 
@@ -109,6 +69,7 @@ public class PlayPanel extends JPanel {
 
     private void handleBackButtonClick() {
         if (isGameFinished) {
+            highScoreEnterName();
             navigateToMainMenu();
         } else {
             if (!isPaused) {
@@ -153,7 +114,9 @@ public class PlayPanel extends JPanel {
         navigateToMainMenu();
     }
 
+    // This is just a placeholder. Need to determine how to store score and name in JSON file.
     private void saveScore(String playerName) {
-        System.out.println("Score saved for player:" + playerName);
+
+        System.out.println("Score saved for player: " + playerName);
     }
 }
