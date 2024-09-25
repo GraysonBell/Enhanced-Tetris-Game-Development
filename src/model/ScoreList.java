@@ -1,3 +1,5 @@
+// This creates a JSON file that can hold the configuration data and saves it when it needs to be reopened again.
+
 package model;
 
 import com.google.gson.Gson;
