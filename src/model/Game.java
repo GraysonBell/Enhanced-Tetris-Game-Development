@@ -44,7 +44,7 @@ public class Game extends JPanel implements ActionListener {
         setupKeyBindings();
 
 
-        scorePanel = new Score();
+        scorePanel = new Score("----", 0, MetaConfig.getInstance());
         setLayout(new BorderLayout());
         add(scorePanel, BorderLayout.EAST); // Add the score panel
     }

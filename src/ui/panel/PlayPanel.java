@@ -1,8 +1,8 @@
 package ui.panel;
 
+import model.*;
 import ui.MainFrame;
 import ui.UIGenerator;
-import model.Game;
 
 import javax.sound.sampled.Line;
 import javax.swing.*;
@@ -51,8 +51,6 @@ public class PlayPanel extends JPanel {
 
     }
 
-
-
     public void startGame() {
         game.start(); // Start the game when this method is called
     }
@@ -90,23 +88,39 @@ public class PlayPanel extends JPanel {
         isPaused = paused;
     }
 
-    private void highScoreEnterName()
-    {
+    private void highScoreEnterName() {
+        // Retrieve the current score from the Score class
+        int currentScore = Score.getScore(); // Get the current score
         String playerName = JOptionPane.showInputDialog(this, "Player 1's score is in the top scores, please enter player 1's name:", "High Score", JOptionPane.PLAIN_MESSAGE);
 
         if (playerName != null && !playerName.trim().isEmpty()) {
-            saveScore(playerName);
-        }
-        else {
+            // Check if the current score is a high score
+            if (ScoreList.getInstance().getScores().size() < ScoreList.MAX_SCORE_NUM ||
+                    currentScore > ScoreList.getInstance().getHighScoreOrder(ScoreList.MAX_SCORE_NUM - 1).score()) {
+                saveScore(playerName, currentScore); // Pass the current score to saveScore
+            } else {
+                JOptionPane.showMessageDialog(this, "Your score did not make it to the top scores.", "Information", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } else {
             JOptionPane.showMessageDialog(this, "No name entered. Score won't be saved.", "Information", JOptionPane.INFORMATION_MESSAGE);
         }
 
         navigateToMainMenu();
     }
 
-    // This is just a placeholder. Need to determine how to store score and name in JSON file.
-    private void saveScore(String playerName) {
+    private void saveScore(String playerName, int currentScore) {
+        // Get specific values from MetaConfig
+        MetaConfig metaConfig = MetaConfig.getInstance();
+        int fieldWidth = metaConfig.getFieldWidth();
+        int fieldHeight = metaConfig.getFieldHeight();
+        int initLevel = metaConfig.getInitLevel();
+        boolean extendMode = metaConfig.isExtendMode(); // Retrieve Extend Mode
 
-        System.out.println("Score saved for player: " + playerName);
+        // Create a new ScoreRecords object with the current score and selected MetaConfig values
+        ScoreRecords newScore = new ScoreRecords(playerName, currentScore, fieldWidth, fieldHeight, initLevel, extendMode);
+        ScoreList.getInstance().addScore(newScore); // Add the score to the ScoreList
+
+        System.out.println("Score saved for player: " + playerName + " with score: " + currentScore);
     }
+
 }

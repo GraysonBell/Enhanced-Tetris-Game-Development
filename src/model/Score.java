@@ -2,10 +2,7 @@
 
 package model;
 
-import ui.panel.PlayPanel;
-
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 
 public class Score extends JPanel {
@@ -30,41 +27,26 @@ public class Score extends JPanel {
                 }
             }
             observer.repaint();
-
         }
-
     }
 
-    public Score() {
-
+    public Score(String s, int i, MetaConfig instance) {
         linesCleared = 0;
         score = 0;
-
     }
 
     // Method to update the score based on the number of lines cleared at once
     public void updateScore(int lines) {
         switch (lines) {
-            case 1:
-                score += 100;
-                break;
-            case 2:
-                score += 300;
-                break;
-            case 3:
-                score += 500;
-                break;
-            case 4:
-                score += 800;
-                break;
+            case 1: score += 100; break;
+            case 2: score += 300; break;
+            case 3: score += 500; break;
+            case 4: score += 800; break;
             default:
                 break;
         }
-
         linesCleared += lines;
-
         Score.informObservers();
-
     }
 
     // Method to reset the score and lines cleared

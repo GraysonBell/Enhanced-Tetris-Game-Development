@@ -4,9 +4,11 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import model.Score;
+import model.MetaConfig;
 
 public class inGameStatsPanel extends JPanel {
 
+    private MetaConfig config;
     private Score score;
 
     private JLabel gameInfo;
@@ -19,7 +21,8 @@ public class inGameStatsPanel extends JPanel {
 
     public inGameStatsPanel() {
         setLayout(new BorderLayout());
-        score = new Score();
+        score = new Score("----", 0, MetaConfig.getInstance());
+        config = MetaConfig.getInstance();
 
         JPanel gameStatusDisplay = new JPanel();
         gameStatusDisplay.setLayout(new GridLayout(0, 1));
@@ -28,13 +31,13 @@ public class inGameStatsPanel extends JPanel {
         gameInfo = new JLabel("Game Info (Player 1)", JLabel.CENTER);
         gameInfo.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        playerTypeLabel = new JLabel("Player type: Human", JLabel.CENTER);
+        playerTypeLabel = new JLabel("Player type: " + getPlayerType(), JLabel.CENTER);
         playerTypeLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        initialLevelLabel = new JLabel("Initial level: ", JLabel.CENTER);
+        initialLevelLabel = new JLabel("Initial level: " + config.getInitLevel(), JLabel.CENTER);
         initialLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        currentLevelLabel = new JLabel("Current level: ", JLabel.CENTER);
+        currentLevelLabel = new JLabel("Current level: " , JLabel.CENTER);
         currentLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
         scoreLabel = new JLabel("Score: " + Score.getScore(), JLabel.CENTER);
@@ -66,6 +69,14 @@ public class inGameStatsPanel extends JPanel {
 
         add(gameStatusDisplay);
 
+    }
+    // this is to help get player type as a string.
+    private String getPlayerType() {
+        return switch (config.getPlayerOneType()) {
+            case 1 -> "AI";
+            case 2 -> "External";
+            default -> "Human";
+        };
     }
 
 }
