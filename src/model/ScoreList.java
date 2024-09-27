@@ -91,4 +91,9 @@ public class ScoreList {
         }
     }
 
+    public void clearScores() {
+        scores.clear();
+        saveScores();
+    }
+
 }
