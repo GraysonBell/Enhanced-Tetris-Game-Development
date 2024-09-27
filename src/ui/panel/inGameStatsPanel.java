@@ -5,6 +5,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import model.Score;
 import model.MetaConfig;
+import model.TetrisShape;
 
 public class inGameStatsPanel extends JPanel {
 
@@ -33,6 +34,7 @@ public class inGameStatsPanel extends JPanel {
 
         playerTypeLabel = new JLabel("Player type: " + getPlayerType(), JLabel.CENTER);
         playerTypeLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+
 
         initialLevelLabel = new JLabel("Initial level: " + config.getInitLevel(), JLabel.CENTER);
         initialLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));

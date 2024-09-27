@@ -3,105 +3,80 @@
 
 package ui.panel;
 
+import com.google.gson.*;
+import model.*;
 import ui.MainFrame;
 import ui.UIGenerator;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+
 
 public class HighScorePanel extends JPanel {
 
-    public HighScorePanel(){
+    public HighScorePanel() {
+
         // Have to set the layout so I know what type of Layout it is for me to put things places.
         setLayout(new BorderLayout());
 
-        BorderLayout layout = new BorderLayout();
+        MetaConfig config = MetaConfig.getInstance();
+        ScoreList scoreList = ScoreList.getInstance();
+        java.util.List<ScoreRecords> scores = scoreList.getScores();
 
 
         //Created the title Page
         JLabel titleLabel = new JLabel("High Scores");
-        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN,  50));
+        titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 50));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
 
-        // Left most section for name labels
+        //Main panel with GridLayout
 
-        JPanel namePanel = new JPanel(new GridBagLayout());
-        GridBagConstraints nameConstraints = new GridBagConstraints();
-        nameConstraints.anchor = GridBagConstraints.CENTER;
-        nameConstraints.insets = new Insets(20, 150, 20, 0);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(0, 4, 1, 1));
+        mainPanel.setPreferredSize(new Dimension(800, 400));
 
-        nameConstraints.gridx = 0;
-        nameConstraints.gridy = 0;
+        // Add padding to mainPanel
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 0)); // Top, Left, Bottom, Right padding
+        add(mainPanel);
 
-        JLabel nameHeading;
-        nameHeading = new JLabel("Name");
-        nameHeading.setFont(new Font("Gill Sans Bold", Font.PLAIN,  20));
-        nameHeading.setHorizontalAlignment(JLabel.CENTER);
-        namePanel.add(nameHeading, nameConstraints);
-        nameConstraints.gridy++;
+        JLabel rankingLabel = new JLabel("#", JLabel.CENTER);
+        rankingLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        namePanel.add(new JLabel("Alex"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Omar"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Grayson"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Melvin"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Diljot"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Omar"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Melvin"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Alex"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Grayson"), nameConstraints);
-        nameConstraints.gridy++;
-        namePanel.add(new JLabel("Diljot"), nameConstraints);
-        nameConstraints.gridy++;
+        JLabel nameLabel = new JLabel("Name", JLabel.CENTER);
+        nameLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        // Right most section for score labels
+        JLabel scoreLabel = new JLabel("Score", JLabel.CENTER);
+        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        JPanel scorePanel = new JPanel(new GridBagLayout());
-        GridBagConstraints scoreConstraints = new GridBagConstraints();
-        scoreConstraints.anchor = GridBagConstraints.CENTER;
-        scoreConstraints.insets = new Insets(20, 0, 20, 150);
+        JLabel configLabel = new JLabel("Config", JLabel.CENTER);
+        configLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        scoreConstraints.gridx = 0;
-        scoreConstraints.gridy = 0;
+        mainPanel.add(rankingLabel);
+        mainPanel.add(nameLabel);
+        mainPanel.add(scoreLabel);
+        mainPanel.add(configLabel);
 
-        JLabel scoreHeading;
-        scoreHeading = new JLabel("Score");
-        scoreHeading.setFont(new Font("Gill Sans Bold", Font.PLAIN,  20));
-        scoreHeading.setHorizontalAlignment(JLabel.CENTER);
-        scorePanel.add(scoreHeading, scoreConstraints);
-        scoreConstraints.gridy++;
+        for (int i = 0; i < scores.size(); i++) {
+            ScoreRecords score = scores.get(i);
+            mainPanel.add(new JLabel(String.valueOf(i + 1), JLabel.CENTER));
+            mainPanel.add(new JLabel(score.name(), JLabel.CENTER));
+            mainPanel.add(new JLabel(String.valueOf(score.score()), JLabel.CENTER));
 
-        scorePanel.add(new JLabel("869613"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("754569"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("642871"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("549280"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("537726"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("452740"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("366765"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("326181"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("301649"), scoreConstraints);
-        scoreConstraints.gridy++;
-        scorePanel.add(new JLabel("260598"), scoreConstraints);
-        scoreConstraints.gridy++;
+            // Config column
+            String configuration = String.format("%dx%d(%d) %b", score.fieldWidth(), score.fieldHeight(), score.initLevel(), score.extendMode());
+            mainPanel.add(new JLabel(configuration, JLabel.CENTER));
+        }
 
-        add(namePanel, BorderLayout.WEST);
-        add(scorePanel, BorderLayout.EAST);
+        mainPanel.setVisible(true);
 
         // Created the Back Button
         Dimension buttonSize = new Dimension(200, 40);
@@ -116,4 +91,5 @@ public class HighScorePanel extends JPanel {
         add(configureButton, BorderLayout.SOUTH);
 
     }
+
 }
