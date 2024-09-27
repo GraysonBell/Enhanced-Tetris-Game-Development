@@ -32,21 +32,31 @@ public class HighScorePanel extends JPanel {
         java.util.List<ScoreRecords> scores = scoreList.getScores();
 
 
-        //Created the title Page
+        // Title
+
         JLabel titleLabel = new JLabel("High Scores");
         titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 50));
         titleLabel.setHorizontalAlignment(JLabel.CENTER);
         add(titleLabel, BorderLayout.NORTH);
+
+        // Clear scores button
+
+        JPanel buttonPanel = new JPanel();
+        JButton clearButton = new JButton("Clear High Score");
+        buttonPanel.add(clearButton);
+        add(buttonPanel, BorderLayout.EAST);
 
         //Main panel with GridLayout
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(0, 4, 1, 1));
         mainPanel.setPreferredSize(new Dimension(800, 400));
-
-        // Add padding to mainPanel
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 0)); // Top, Left, Bottom, Right padding
         add(mainPanel);
+
+
+
+        // Column headings
 
         JLabel rankingLabel = new JLabel("#", JLabel.CENTER);
         rankingLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
@@ -65,6 +75,8 @@ public class HighScorePanel extends JPanel {
         mainPanel.add(scoreLabel);
         mainPanel.add(configLabel);
 
+        // Add the records
+
         for (int i = 0; i < scores.size(); i++) {
             ScoreRecords score = scores.get(i);
             mainPanel.add(new JLabel(String.valueOf(i + 1), JLabel.CENTER));
@@ -78,6 +90,13 @@ public class HighScorePanel extends JPanel {
 
         mainPanel.setVisible(true);
 
+        // Action listener for clear scores
+        clearButton.addActionListener(e -> {
+            scoreList.getScores().clear(); //Clear scores from list.
+            ScoreList.saveScores(); // Save changes to JSON file
+            refreshScorePanel(mainPanel, scoreList);
+        });
+
         // Created the Back Button
         Dimension buttonSize = new Dimension(200, 40);
         Color buttonBorderColor = Color.BLACK;
@@ -89,6 +108,47 @@ public class HighScorePanel extends JPanel {
 
         // Add the button to the south section
         add(configureButton, BorderLayout.SOUTH);
+
+    }
+
+    private static void refreshScorePanel(JPanel mainPanel, ScoreList scoreList) {
+        mainPanel.removeAll(); // Clear existing components
+
+        // Add column headers again
+        JLabel rankingLabel = new JLabel("#", JLabel.CENTER);
+        rankingLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+
+        JLabel nameLabel = new JLabel("Name", JLabel.CENTER);
+        nameLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+
+        JLabel scoreLabel = new JLabel("Score", JLabel.CENTER);
+        scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+
+        JLabel configLabel = new JLabel("Config", JLabel.CENTER);
+        configLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+
+        mainPanel.add(rankingLabel);
+        mainPanel.add(nameLabel);
+        mainPanel.add(scoreLabel);
+        mainPanel.add(configLabel);
+
+        // Populate with update score data.
+
+        java.util.List<ScoreRecords> scores = scoreList.getScores();
+        for (int i = 0; i < scores.size(); i++) {
+            ScoreRecords score = scores.get(i);
+            mainPanel.add(new JLabel(String.valueOf(i + 1), JLabel.CENTER));
+            mainPanel.add(new JLabel(score.name(), JLabel.CENTER));
+            mainPanel.add(new JLabel(String.valueOf(score.score()), JLabel.CENTER));
+
+            // Config column
+            String configuration = String.format("%dx%d(%d) %b", score.fieldWidth(), score.fieldHeight(), score.initLevel(), score.extendMode());
+            mainPanel.add(new JLabel(configuration, JLabel.CENTER));
+        }
+
+        mainPanel.revalidate();
+        mainPanel.repaint();
+
 
     }
 
