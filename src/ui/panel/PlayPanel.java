@@ -4,9 +4,7 @@ import model.*;
 import ui.MainFrame;
 import ui.UIGenerator;
 
-import javax.sound.sampled.Line;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,6 +12,7 @@ import java.awt.event.ActionListener;
 public class PlayPanel extends JPanel {
 
     private Game game;
+    private Score score_data;
     private inGameStatsPanel gamestats;
     private JButton backButton;
     private boolean isGameFinished = false;
@@ -58,6 +57,7 @@ public class PlayPanel extends JPanel {
     private void handleBackButtonClick() {
         if (isGameFinished) {
             highScoreEnterName();
+            score_data.reset();
             navigateToMainMenu();
         } else {
             if (!isPaused) {
@@ -67,6 +67,7 @@ public class PlayPanel extends JPanel {
             int option = JOptionPane.showConfirmDialog(this, "Are you sure you want to quit the game?", "Quit Game", JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.YES_OPTION) {
                 highScoreEnterName();
+                score_data.reset();
                 navigateToMainMenu();
             } else {
                 game.resume(); // Resume the game

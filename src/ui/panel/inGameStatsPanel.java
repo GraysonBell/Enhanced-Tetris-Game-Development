@@ -39,8 +39,9 @@ public class inGameStatsPanel extends JPanel {
         initialLevelLabel = new JLabel("Initial level: " + config.getInitLevel(), JLabel.CENTER);
         initialLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        currentLevelLabel = new JLabel("Current level: " , JLabel.CENTER);
+        currentLevelLabel = new JLabel("Current level: " + Score.getCurrentLevel(), JLabel.CENTER);
         currentLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
+        Score.addObserver(currentLevelLabel);
 
         scoreLabel = new JLabel("Score: " + Score.getScore(), JLabel.CENTER);
         scoreLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 18));
