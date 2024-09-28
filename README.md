@@ -10,7 +10,7 @@
 | `Down Arrow`  | Pushes the tetromino down. *Hold down* to accelerate |
 | `Spacebar`    | Drops tetromino to the bottom                        |
 | `P`           | Pauses the game                                      |
-| `M`           | Toggles music on/pff                                 |
+| `M`           | Toggles music on/off                                 |
 | `S`           | Toggles sounds on/off                                |
 
 ## Scoring
