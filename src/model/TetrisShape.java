@@ -67,6 +67,21 @@ public class TetrisShape {
             result.coords[i][1] = coords[i][0];
         }
         return result;
+
+
+    }
+
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (!(obj instanceof TetrisShape)) return false;
+        TetrisShape other = (TetrisShape) obj;
+        if (this.pieceShape != other.pieceShape) return false;
+        for (int i = 0; i < 4; i++) {
+            if (this.coords[i][0] != other.coords[i][0] || this.coords[i][1] != other.coords[i][1]) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public int[][] getCoords() {
@@ -75,5 +90,27 @@ public class TetrisShape {
 
     public Shape getShape() {
         return pieceShape;
+    }
+
+    public int getWidth() {
+        int minX = getMinX();
+        int maxX = getMaxX();
+        return maxX - minX + 1;
+    }
+
+    public int getMinX() {
+        int m = coords[0][0];
+        for (int i = 1; i < 4; i++) {
+            m = Math.min(m, coords[i][0]);
+        }
+        return m;
+    }
+
+    public int getMaxX() {
+        int m = coords[0][0];
+        for (int i = 1; i < 4; i++) {
+            m = Math.max(m, coords[i][0]);
+        }
+        return m;
     }
 }
