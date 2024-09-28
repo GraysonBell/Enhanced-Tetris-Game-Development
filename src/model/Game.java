@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Game extends JPanel implements ActionListener {
@@ -33,6 +35,7 @@ public class Game extends JPanel implements ActionListener {
     private String pauseMessage = "";
     private boolean isMusicOn = true;
     private boolean isSoundOn = true;
+    private boolean isAIEnabled = false;
 
     // Alex - testing to see if I can add observers for tetronimo
     private static final ArrayList<JComponent> observers = new ArrayList<>();
@@ -236,7 +239,235 @@ public class Game extends JPanel implements ActionListener {
                 soundToggle();
             }
         });
+
+        inputMap.put(KeyStroke.getKeyStroke("A"), "toggleAI"); // Toggle AI control
+        actionMap.put("toggleAI", new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                isAIEnabled = !isAIEnabled;
+                System.out.println("AI mode: " + (isAIEnabled ? "Enabled" : "Disabled"));
+            }
+        });
     }
+
+    private void makeAIMove() {
+        Move bestMove = findBestMove();
+        if (bestMove != null) {
+            // Apply the best move
+            curPiece = bestMove.piece;
+            curX = bestMove.x;
+            curY = bestMove.y;
+            dropDown();
+        }
+    }
+
+    private class Move {
+        public TetrisShape piece;
+        public int x;
+        public int y;
+        public double score;
+
+        public Move(TetrisShape piece, int x, int y, double score) {
+            this.piece = piece;
+            this.x = x;
+            this.y = y;
+            this.score = score;
+        }
+    }
+
+    private Move findBestMove() {
+        double bestScore = Double.NEGATIVE_INFINITY; // Keep track of the highest score
+        Move bestMove = null; // The best move found
+
+        // Get all possible rotations of the current piece
+        TetrisShape[] rotations = getAllRotations(curPiece);
+
+        // Loop through each rotation
+        for (TetrisShape rotation : rotations) {
+            int minX = rotation.getMinX();
+            int maxX = rotation.getMaxX();
+
+            // Create a list of possible x positions and shuffle it to randomize order
+            List<Integer> xPositions = new ArrayList<>();
+            for (int x = -minX; x < BOARD_WIDTH - maxX; x++) {
+                xPositions.add(x);
+            }
+            Collections.shuffle(xPositions); // Randomize the column order
+
+            // Try every possible horizontal position for this rotation in random order
+            for (int x : xPositions) {
+                // Determine the drop height for this piece at this position
+                int y = getDropHeight(rotation, x);
+                if (y < 0) {
+                    continue; // Skip invalid positions
+                }
+
+                // Simulate the board with the piece placed at (x, y)
+                TetrisShape.Shape[] boardCopy = board.clone(); // Clone the board to simulate
+                placePiece(rotation, x, y, boardCopy); // Simulate placing the piece
+
+                // Evaluate the board after placing the piece
+                double score = evaluateBoard(boardCopy); // Score the board
+                System.out.println("Testing move: x=" + x + ", y=" + y + ", rotation=" + rotation + ", score=" + score + ", Best Score=" + bestScore);
+                // Only update the bestMove if this move has a higher score
+                if (score > bestScore) {
+                    bestScore = score; // Update the best score found
+                    bestMove = new Move(rotation, x, y, score); // Store the best move
+                }
+            }
+        }
+
+        return bestMove; // Return the best move after evaluating all positions
+    }
+
+    private TetrisShape[] getAllRotations(TetrisShape piece) {
+        List<TetrisShape> rotations = new ArrayList<>();
+        TetrisShape currentRotation = piece;
+
+        // Add the original rotation
+        rotations.add(currentRotation);
+
+        // Generate all rotations (up to 4 for a standard Tetris piece)
+        for (int i = 0; i < 3; i++) {
+            currentRotation = currentRotation.rotateRight();
+            // Only add if this rotation has not been added already
+            boolean isDuplicate = false;
+            for (TetrisShape rotation : rotations) {
+                if (rotation.equals(currentRotation)) {
+                    isDuplicate = true;
+                    break;
+                }
+            }
+            if (!isDuplicate) {
+                rotations.add(currentRotation);
+            }
+        }
+
+        return rotations.toArray(new TetrisShape[0]);
+    }
+
+    private int getDropHeight(TetrisShape piece, int x) {
+        int y = curY;
+        while (y > 0) {
+            if (!tryMove(piece, x, y - 1, board)) {
+                break;
+            }
+            y--;
+        }
+        return y;
+    }
+
+    private boolean tryMove(TetrisShape newPiece, int newX, int newY, TetrisShape.Shape[] board) {
+        for (int i = 0; i < 4; i++) {
+            int x = newX + newPiece.getCoords()[i][0];
+            int y = newY - newPiece.getCoords()[i][1];
+
+            if (x < 0 || x >= BOARD_WIDTH || y < 0 || y >= BOARD_HEIGHT) {
+                return false;
+            }
+
+            if (board[(y * BOARD_WIDTH) + x] != TetrisShape.Shape.NoShape) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void placePiece(TetrisShape piece, int x, int y, TetrisShape.Shape[] board) {
+        for (int i = 0; i < 4; i++) {
+            int px = x + piece.getCoords()[i][0];
+            int py = y - piece.getCoords()[i][1];
+            if (py >= 0 && py < BOARD_HEIGHT && px >= 0 && px < BOARD_WIDTH) {
+                board[(py * BOARD_WIDTH) + px] = piece.getShape();
+            }
+        }
+        removeFullLines(board);
+    }
+
+    private void removeFullLines(TetrisShape.Shape[] board) {
+        for (int i = BOARD_HEIGHT - 1; i >= 0; i--) {
+            boolean lineIsFull = true;
+
+            for (int j = 0; j < BOARD_WIDTH; j++) {
+                if (board[(i * BOARD_WIDTH) + j] == TetrisShape.Shape.NoShape) {
+                    lineIsFull = false;
+                    break;
+                }
+            }
+
+            if (lineIsFull) {
+                for (int k = i; k < BOARD_HEIGHT - 1; k++) {
+                    for (int j = 0; j < BOARD_WIDTH; j++) {
+                        board[(k * BOARD_WIDTH) + j] = board[((k + 1) * BOARD_WIDTH) + j];
+                    }
+                }
+                i++; // Recheck the same line
+            }
+        }
+    }
+
+    private double evaluateBoard(TetrisShape.Shape[] board) {
+        int aggregateHeight = 0;
+        int completeLines = 0;
+        int holes = 0;
+        int bumpiness = 0;
+
+        int[] columnHeights = new int[BOARD_WIDTH];
+
+        // Calculate column heights
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            for (int y = 0; y < BOARD_HEIGHT; y++) {
+                if (board[(y * BOARD_WIDTH) + x] != TetrisShape.Shape.NoShape) {
+                    columnHeights[x] = BOARD_HEIGHT - y;
+                    break;
+                }
+            }
+        }
+
+        // Aggregate height and bumpiness
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            aggregateHeight += columnHeights[x];
+            if (x > 0) {
+                bumpiness += Math.abs(columnHeights[x] - columnHeights[x - 1]);
+            }
+        }
+
+        // Count complete lines
+        for (int y = 0; y < BOARD_HEIGHT; y++) {
+            boolean isLineComplete = true;
+            for (int x = 0; x < BOARD_WIDTH; x++) {
+                if (board[(y * BOARD_WIDTH) + x] == TetrisShape.Shape.NoShape) {
+                    isLineComplete = false;
+                    break;
+                }
+            }
+            if (isLineComplete) {
+                completeLines++;
+            }
+        }
+
+        // Count holes
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            boolean blockFound = false;
+            for (int y = 0; y < BOARD_HEIGHT; y++) {
+                if (board[(y * BOARD_WIDTH) + x] != TetrisShape.Shape.NoShape) {
+                    blockFound = true;
+                } else if (blockFound) {
+                    holes++;
+                }
+            }
+        }
+
+        // Evaluation function weights (these can be adjusted)
+        double a = 2.9;
+        double b = 2.5;
+        double c = -1.0;
+        double d = -1.0;
+
+        // Compute the score
+        return (a * aggregateHeight) + (b * completeLines) + (c * holes) + (d * bumpiness);
+    }
+
 
     private void dropDown() {
         int newY = curY;
@@ -411,7 +642,11 @@ public class Game extends JPanel implements ActionListener {
             isFallingFinished = false;
             newPiece();
         } else {
-            oneLineDown();
+            if (isAIEnabled) {
+                makeAIMove(); // Let the AI decide the move
+            } else {
+                oneLineDown(); // Existing behavior
+            }
         }
     }
 
