@@ -51,6 +51,7 @@ public class PlayPanel extends JPanel {
     }
 
     public void startGame() {
+        gamestats.resetStats();
         game.start(); // Start the game when this method is called
     }
 

@@ -82,4 +82,18 @@ public class inGameStatsPanel extends JPanel {
         };
     }
 
+    public void resetStats() {
+        Score.clearObservers();
+
+        score = new Score("----", 0, MetaConfig.getInstance());
+
+        currentLevelLabel.setText("Current level: " + Score.getCurrentLevel());
+        scoreLabel.setText("Score: " + Score.getScore());
+        linesLabel.setText("Lines Cleared: " + Score.getLinesCleared());
+
+        Score.addObserver(currentLevelLabel);
+        Score.addObserver(scoreLabel);
+        Score.addObserver(linesLabel);
+    }
+
 }
