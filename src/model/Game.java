@@ -36,25 +36,6 @@ public class Game extends JPanel implements ActionListener {
     private boolean isMusicOn = true;
     private boolean isSoundOn = true;
 
-    // Alex - testing to see if I can add observers for tetronimo
-    private static final ArrayList<JComponent> observers = new ArrayList<>();
-
-    public static void addObserver(JComponent comp) {observers.add(comp); }
-
-    public static void clearObservers() {observers.clear(); }
-
-    public static void informObservers() {
-        for (JComponent observer : observers) {
-            if (observer instanceof JLabel) {
-                JLabel label = (JLabel) observer;
-                if (label.getText().startsWith("Next Tetromino:")) {
-                    label.setText("Next Tetromino:");
-                }
-            }
-            observer.repaint();
-        }
-    }
-
 
     public Game() {
 
@@ -474,6 +455,7 @@ public class Game extends JPanel implements ActionListener {
     private void soundToggle() {
         isSoundOn = !isSoundOn;
         SoundHandler.setSoundOn(isSoundOn);
+
     }
 
     public void pause() {

@@ -59,7 +59,6 @@ public class HighScorePanel extends JPanel {
         add(mainPanel);
 
 
-
         // Column headings
 
         JLabel rankingLabel = new JLabel("#", JLabel.CENTER);
@@ -160,5 +159,4 @@ public class HighScorePanel extends JPanel {
 
 
     }
-
 }

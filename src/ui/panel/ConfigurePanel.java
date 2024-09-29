@@ -1,5 +1,6 @@
 package ui.panel;
 
+import model.Game;
 import model.MetaConfig;
 import ui.MainFrame;
 import ui.UIGenerator;
@@ -8,8 +9,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ConfigurePanel extends JPanel {
+
     public ConfigurePanel() {
         setLayout(new BorderLayout());
 
@@ -50,6 +53,7 @@ public class ConfigurePanel extends JPanel {
         addLabel(mainPanel, "Music (On/Off):");
         JCheckBox musicCheckBox = createCheckBox(mainPanel, "Music (On/Off):");
         musicCheckBox.setSelected(config.isMusicOn());
+
 
         addLabel(mainPanel, "Sound Effects (On/Off):");
         JCheckBox soundEffectsCheckBox = createCheckBox(mainPanel, "Sound Effects (On/Off):");
@@ -230,8 +234,10 @@ public class ConfigurePanel extends JPanel {
             // Update the MetaConfig instance based on checkbox state
             if (labelText.contains("Music")) {
                 MetaConfig.getInstance().setMusicOn(checkBox.isSelected());
+                Game.SoundHandler.setMusicOn(checkBox.isSelected());
             } else if (labelText.contains("Sound Effects")) {
                 MetaConfig.getInstance().setSoundOn(checkBox.isSelected());
+                Game.SoundHandler.setSoundOn(checkBox.isSelected());
             } else if (labelText.contains("Extend Mode")) {
                 MetaConfig.getInstance().setExtendMode(checkBox.isSelected());
             }

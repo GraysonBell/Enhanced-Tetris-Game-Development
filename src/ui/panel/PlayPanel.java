@@ -17,8 +17,8 @@ public class PlayPanel extends JPanel {
     private JButton backButton;
     private boolean isGameFinished = false;
     private boolean isPaused = false;
-    private JLabel musicLabel;
-    private JLabel soundLabel;
+    public static JLabel musicLabel;
+    public JLabel soundLabel;
 
     public PlayPanel() {
         setLayout(new BorderLayout());
@@ -47,6 +47,7 @@ public class PlayPanel extends JPanel {
         JLabel spacer = new JLabel(" ");
         spacer.setPreferredSize(new Dimension(0, 10)); // Adjust the height as needed
         labelPanel.add(spacer);
+
 
         soundLabel = new JLabel("SOUND: " + (MetaConfig.getInstance().isSoundOn() ? "ON" : "OFF"));
         soundLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 20));
