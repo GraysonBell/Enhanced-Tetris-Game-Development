@@ -32,9 +32,9 @@ public class inGameStatsPanel extends JPanel {
         gameInfo = new JLabel("Game Info (Player 1)", JLabel.CENTER);
         gameInfo.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
 
-        playerTypeLabel = new JLabel("Player type: " + getPlayerType(), JLabel.CENTER);
+        playerTypeLabel = new JLabel("Player type: " + config.getPlayerType(), JLabel.CENTER);
         playerTypeLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
-
+        MetaConfig.addObserver(playerTypeLabel);
 
         initialLevelLabel = new JLabel("Initial level: " + config.getInitLevel(), JLabel.CENTER);
         initialLevelLabel.setFont(new Font("Gill Sans Ultra Bold", Font.BOLD, 14));
@@ -74,13 +74,13 @@ public class inGameStatsPanel extends JPanel {
 
     }
     // this is to help get player type as a string.
-    private String getPlayerType() {
-        return switch (config.getPlayerOneType()) {
-            case 1 -> "AI";
-            case 2 -> "External";
-            default -> "Human";
-        };
-    }
+//    private String getPlayerType() {
+//        return switch (config.getPlayerOneType()) {
+//            case 1 -> "AI";
+//            case 2 -> "External";
+//            default -> "Human";
+//        };
+//    }
 
     public void resetStats() {
         Score.clearObservers();
