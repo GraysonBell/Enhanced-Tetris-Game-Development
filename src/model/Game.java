@@ -623,10 +623,14 @@ public class Game extends JPanel implements ActionListener {
             isFallingFinished = false;
             newPiece();
         } else {
-            if (MetaConfig.getInstance().getPlayerOneType() == 1 || MetaConfig.getInstance().getPlayerTwoType() == 1 ) {
+            // Check if Player One or Player Two is set to AI mode
+            int playerOneType = MetaConfig.getInstance().getPlayerOneType();
+            int playerTwoType = MetaConfig.getInstance().getPlayerTwoType();
+
+            if ((playerOneType == 1)) {
                 makeAIMove(); // Let the AI decide the move
             } else {
-                oneLineDown(); // Existing behavior
+                oneLineDown(); // Continue with manual control for human players
             }
         }
     }
