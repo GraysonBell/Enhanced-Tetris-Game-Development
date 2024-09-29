@@ -17,7 +17,8 @@ public class PlayPanel extends JPanel {
     private JButton backButton;
     private boolean isGameFinished = false;
     private boolean isPaused = false;
-
+    private JLabel musicLabel;
+    private JLabel soundLabel;
 
     public PlayPanel() {
         setLayout(new BorderLayout());
@@ -25,13 +26,37 @@ public class PlayPanel extends JPanel {
         game = new Game();  // Initialize the Game instance, but do not start it
         add(game, BorderLayout.CENTER);
 
+        // Labels for the title and the Music/Sound
+
+        JPanel northPanel = new JPanel();
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+
         JLabel titleLabel = new JLabel("Play");
         titleLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 25));
-        titleLabel.setHorizontalAlignment(JLabel.CENTER);
-        add(titleLabel, BorderLayout.NORTH);
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        northPanel.add(titleLabel);
 
+        JPanel labelPanel = new JPanel();
+        labelPanel.setLayout(new FlowLayout());
 
-        //Implements the game stats display
+        musicLabel = new JLabel("MUSIC: " + (MetaConfig.getInstance().isMusicOn() ? "ON" : "OFF"));
+        musicLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 20));
+        labelPanel.add(musicLabel);
+        MetaConfig.addObserver(musicLabel);
+
+        JLabel spacer = new JLabel(" ");
+        spacer.setPreferredSize(new Dimension(0, 10)); // Adjust the height as needed
+        labelPanel.add(spacer);
+
+        soundLabel = new JLabel("SOUND: " + (MetaConfig.getInstance().isSoundOn() ? "ON" : "OFF"));
+        soundLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 20));
+        labelPanel.add(soundLabel);
+        MetaConfig.addObserver(soundLabel);
+
+        northPanel.add(labelPanel);
+        add(northPanel, BorderLayout.NORTH);
+
+        // Implements the game stats display.
         gamestats = new inGameStatsPanel();
         add(gamestats, BorderLayout.WEST);
 
