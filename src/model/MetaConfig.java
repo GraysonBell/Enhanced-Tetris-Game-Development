@@ -56,6 +56,10 @@ public class MetaConfig {
                 JLabel label = (JLabel) observer;
                 if (label.getText().contains("Player type:")) {
                     label.setText("Player type: " + instance.getPlayerType());
+                } else if (label.getText().contains("MUSIC:")) {
+                    label.setText("MUSIC: " + (instance.isMusicOn() ? "ON" : "OFF"));
+                } else if (label.getText().contains("SOUND:")) {
+                    label.setText("SOUND: " + (instance.isSoundOn() ? "ON" : "OFF"));
                 }
             }
             observer.repaint();
@@ -121,6 +125,7 @@ public class MetaConfig {
 
     public void setMusicOn(boolean musicOn) {
         this.isMusicOn = musicOn;
+        notifyObservers();
         saveConfigFile();
     }
 
@@ -130,6 +135,7 @@ public class MetaConfig {
 
     public void setSoundOn(boolean soundOn) {
         this.isSoundOn = soundOn;
+        notifyObservers();
         saveConfigFile();
     }
 
@@ -166,6 +172,7 @@ public class MetaConfig {
 
     public void setPlayerTwoType(int playerTwoType) {
         this.playerTwoType = playerTwoType;
+        notifyObservers();
         saveConfigFile();
     }
 }
