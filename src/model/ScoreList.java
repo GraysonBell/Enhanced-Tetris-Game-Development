@@ -4,7 +4,9 @@ package model;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import ui.panel.HighScorePanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -18,6 +20,22 @@ public class ScoreList {
     private ArrayList<ScoreRecords> scores = new ArrayList<>();
     private static final String SCORE_FILE = "TetrisScores.json";
     public static final int MAX_SCORE_NUM = 10;
+
+    private static final ArrayList<JComponent> observers = new ArrayList<>();
+
+    public static void addObserver(JComponent comp) {observers.add(comp); }
+
+    public static void clearObservers() {observers.clear(); }
+
+    private static void informObservers() {
+        for (JComponent observer : observers) {
+            if (observer instanceof HighScorePanel) {
+                ((HighScorePanel) observer).updateScores();
+            } else {
+                observer.repaint();
+            }
+        }
+    }
 
     // Private constructor for Singleton
     private ScoreList() {
@@ -80,6 +98,7 @@ public class ScoreList {
             scores.remove(scores.size() - 1); // Remove the lowest score
         }
         saveScores();
+        informObservers();
     }
 
     // I need to get the score in order.

@@ -22,6 +22,8 @@ import java.util.ArrayList;
 
 public class HighScorePanel extends JPanel {
 
+    private JPanel mainPanel;
+
     public HighScorePanel() {
 
         // Have to set the layout so I know what type of Layout it is for me to put things places.
@@ -30,6 +32,8 @@ public class HighScorePanel extends JPanel {
         MetaConfig config = MetaConfig.getInstance();
         ScoreList scoreList = ScoreList.getInstance();
         java.util.List<ScoreRecords> scores = scoreList.getScores();
+
+        ScoreList.addObserver(this);
 
 
         // Title
@@ -48,7 +52,7 @@ public class HighScorePanel extends JPanel {
 
         //Main panel with GridLayout
 
-        JPanel mainPanel = new JPanel();
+        mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayout(0, 4, 1, 1));
         mainPanel.setPreferredSize(new Dimension(800, 400));
         mainPanel.setBorder(new EmptyBorder(20, 20, 20, 0)); // Top, Left, Bottom, Right padding
@@ -110,6 +114,11 @@ public class HighScorePanel extends JPanel {
         add(configureButton, BorderLayout.SOUTH);
 
     }
+
+    public void updateScores() {
+        refreshScorePanel(mainPanel, ScoreList.getInstance());
+    }
+
 
     private static void refreshScorePanel(JPanel mainPanel, ScoreList scoreList) {
         mainPanel.removeAll(); // Clear existing components
