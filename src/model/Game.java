@@ -35,7 +35,6 @@ public class Game extends JPanel implements ActionListener {
     private String pauseMessage = "";
     private boolean isMusicOn = true;
     private boolean isSoundOn = true;
-    private boolean isAIEnabled = false;
 
     // Alex - testing to see if I can add observers for tetronimo
     private static final ArrayList<JComponent> observers = new ArrayList<>();
@@ -634,7 +633,7 @@ public class Game extends JPanel implements ActionListener {
             isFallingFinished = false;
             newPiece();
         } else {
-            if (MetaConfig.getInstance().getPlayerOneType() != 1 || MetaConfig.getInstance().getPlayerTwoType() != 1) {
+            if (MetaConfig.getInstance().getPlayerOneType() != 1 || MetaConfig.getInstance().getPlayerTwoType() != 2) {
                 makeAIMove(); // Let the AI decide the move
             } else {
                 oneLineDown(); // Existing behavior
