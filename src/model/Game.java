@@ -78,6 +78,7 @@ public class Game extends JPanel implements ActionListener {
         private static boolean isMusicOn = true;
         private static boolean isSoundOn = true;
         private static Clip musicClip;
+        private static String currentMusicPath;
 
         public static void setMusicOn(boolean on) {
             isMusicOn = on;
@@ -85,13 +86,12 @@ public class Game extends JPanel implements ActionListener {
                 if (!isMusicOn) {
                     musicClip.stop();
                     musicClip.close();
+                    System.out.println("Music turned off.");
                 } else {
-                    try {
-                        musicClip.setFramePosition(0);
-                        musicClip.start();
-                        musicClip.loop(Clip.LOOP_CONTINUOUSLY);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    // Re-run the music if music is toggled back on
+                    if (currentMusicPath != null) {
+                        RunMusic(currentMusicPath);
+                        System.out.println("Music turned on.");
                     }
                 }
             }
@@ -103,6 +103,7 @@ public class Game extends JPanel implements ActionListener {
 
         public static void RunMusic(String path) {
             try {
+                currentMusicPath = path;
                 if (musicClip != null) {
                     musicClip.stop();
                     musicClip.close();
@@ -113,12 +114,9 @@ public class Game extends JPanel implements ActionListener {
                 if (isMusicOn) {
                     musicClip.start();
                     musicClip.loop(Clip.LOOP_CONTINUOUSLY);
+                    System.out.println("Music started.");
                 }
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LineUnavailableException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -130,11 +128,7 @@ public class Game extends JPanel implements ActionListener {
                 Clip clip = AudioSystem.getClip();
                 clip.open(inputStream);
                 clip.loop(0);
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LineUnavailableException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -161,11 +155,7 @@ public class Game extends JPanel implements ActionListener {
                 Clip clip = AudioSystem.getClip();
                 clip.open(inputStream);
                 clip.loop(0);
-            } catch (UnsupportedAudioFileException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (LineUnavailableException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -224,7 +214,7 @@ public class Game extends JPanel implements ActionListener {
         });
 
         inputMap.put(KeyStroke.getKeyStroke("M"), "music"); // toggles music on/off
-        actionMap.put("muisc", new AbstractAction() {
+        actionMap.put("music", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 musicToggle();
