@@ -73,14 +73,6 @@ public class inGameStatsPanel extends JPanel {
         add(gameStatusDisplay);
 
     }
-    // this is to help get player type as a string.
-//    private String getPlayerType() {
-//        return switch (config.getPlayerOneType()) {
-//            case 1 -> "AI";
-//            case 2 -> "External";
-//            default -> "Human";
-//        };
-//    }
 
     public void resetStats() {
         Score.clearObservers();
