@@ -43,6 +43,7 @@ public class PlayPanel extends JPanel {
         musicLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 20));
         labelPanel.add(musicLabel);
         MetaConfig.addObserver(musicLabel);
+        Game.addObserver(musicLabel);
 
         JLabel spacer = new JLabel(" ");
         spacer.setPreferredSize(new Dimension(0, 10)); // Adjust the height as needed
@@ -53,6 +54,7 @@ public class PlayPanel extends JPanel {
         soundLabel.setFont(new Font("Gill Sans Ultra Bold", Font.PLAIN, 20));
         labelPanel.add(soundLabel);
         MetaConfig.addObserver(soundLabel);
+        Game.addObserver(soundLabel);
 
         northPanel.add(labelPanel);
         add(northPanel, BorderLayout.NORTH);

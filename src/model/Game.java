@@ -36,6 +36,29 @@ public class Game extends JPanel implements ActionListener {
     private boolean isMusicOn = true;
     private boolean isSoundOn = true;
 
+    // Observers
+
+    private static List<JComponent> observers = new ArrayList<>();
+
+    public static void addObserver(JComponent observer) {observers.add(observer); }
+
+    public static void clearObservers(JComponent observer) { observers.clear(); }
+
+    private static void informObservers() {
+        for (JComponent observer : observers) {
+            if (observer instanceof JLabel) {
+                JLabel label = (JLabel) observer;
+                if (label.getText().contains("MUSIC:")) {
+                    label.setText("MUSIC: " + (SoundHandler.isMusicOn ? "ON" : "OFF"));
+                } else if (label.getText().contains("SOUND:")) {
+                    label.setText("SOUND: " + (SoundHandler.isSoundOn ? "ON" : "OFF"));
+                }
+            }
+            observer.repaint();
+        }
+    }
+
+
 
     public Game() {
 
@@ -63,6 +86,7 @@ public class Game extends JPanel implements ActionListener {
 
         public static void setMusicOn(boolean on) {
             isMusicOn = on;
+            informObservers();
             if (musicClip != null) {
                 if (!isMusicOn) {
                     musicClip.stop();
@@ -79,7 +103,9 @@ public class Game extends JPanel implements ActionListener {
         }
 
         public static void setSoundOn(boolean on) {
+
             isSoundOn = on;
+            informObservers();
         }
 
         public static void RunMusic(String path) {
