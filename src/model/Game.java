@@ -623,7 +623,7 @@ public class Game extends JPanel implements ActionListener {
             isFallingFinished = false;
             newPiece();
         } else {
-            if (MetaConfig.getInstance().getPlayerOneType() != 1 || MetaConfig.getInstance().getPlayerTwoType() != 2) {
+            if (MetaConfig.getInstance().getPlayerOneType() == 1 || MetaConfig.getInstance().getPlayerTwoType() == 1 ) {
                 makeAIMove(); // Let the AI decide the move
             } else {
                 oneLineDown(); // Existing behavior
