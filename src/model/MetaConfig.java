@@ -52,6 +52,12 @@ public class MetaConfig {
 
     private static void notifyObservers() {
         for (JComponent observer : observers) {
+            if (observer instanceof JLabel) {
+                JLabel label = (JLabel) observer;
+                if (label.getText().contains("Player type:")) {
+                    label.setText("Player type: " + instance.getPlayerType());
+                }
+            }
             observer.repaint();
         }
     }
@@ -136,12 +142,21 @@ public class MetaConfig {
         saveConfigFile();
     }
 
+    public String getPlayerType() {
+        return switch (playerOneType) {
+            case 1 -> "AI";
+            case 2 -> "External";
+            default -> "Human";
+        };
+    }
+
     public int getPlayerOneType() {
         return playerOneType;
     }
 
     public void setPlayerOneType(int playerOneType) {
         this.playerOneType = playerOneType;
+        notifyObservers();
         saveConfigFile();
     }
 
