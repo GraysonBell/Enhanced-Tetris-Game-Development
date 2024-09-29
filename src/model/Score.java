@@ -7,9 +7,9 @@ import java.util.ArrayList;
 
 public class Score extends JPanel {
 
-    private static int linesCleared;
-    private static int score;
-    private static int currentLevel;
+    static int linesCleared;
+    static int score;
+    static int currentLevel;
 
     private static final ArrayList<JComponent> observers = new ArrayList<>();
 
@@ -33,28 +33,18 @@ public class Score extends JPanel {
         }
     }
 
+    private ScoreSystem scoreSystem;
+
     public Score(String s, int i, MetaConfig instance) {
         linesCleared = 0;
         score = 0;
         currentLevel = MetaConfig.getInstance().getInitLevel();
+
+        scoreSystem = ScoreFactory.createScoreSystem("default");
     }
 
-    // Method to update the score based on the number of lines cleared at once
     public void updateScore(int lines) {
-        switch (lines) {
-            case 1: score += 100; break;
-            case 2: score += 300; break;
-            case 3: score += 600; break;
-            case 4: score += 1000; break;
-            default:
-                break;
-        }
-        linesCleared += lines;
-
-        if (linesCleared > 0 && linesCleared % 10 == 0) {
-            currentLevel++;
-        }
-
+        scoreSystem.updateScore(this, lines);
         Score.informObservers();
     }
 
