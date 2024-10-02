@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
+import java.awt.event.KeyEvent;
+
 
 
 public class Game extends JPanel implements ActionListener {
@@ -40,6 +42,8 @@ public class Game extends JPanel implements ActionListener {
 
     private static List<JComponent> observers = new ArrayList<>();
 
+    private int playerIndex;
+
     public static void addObserver(JComponent observer) {observers.add(observer); }
 
     public static void clearObservers(JComponent observer) { observers.clear(); }
@@ -58,10 +62,12 @@ public class Game extends JPanel implements ActionListener {
         }
     }
 
+    public Game () {
+        this(0);
+    }
 
-
-    public Game() {
-
+    public Game(int playerIndex) {
+        this.playerIndex = playerIndex; // Set the player index
         setFocusable(true);
         curPiece = new TetrisShape();
         timer = new Timer(400, this);
@@ -70,7 +76,6 @@ public class Game extends JPanel implements ActionListener {
         board = new TetrisShape.Shape[BOARD_WIDTH * BOARD_HEIGHT];
         clearBoard();
         setupKeyBindings();
-
 
         scorePanel = new Score("----", 0, MetaConfig.getInstance());
         setLayout(new BorderLayout());
@@ -170,72 +175,74 @@ public class Game extends JPanel implements ActionListener {
 
     private void setupKeyBindings() {
         InputMap inputMap = this.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        ActionMap actionMap = this.getActionMap(); // Initialising the Key Controls
+        ActionMap actionMap = this.getActionMap();
 
-        inputMap.put(KeyStroke.getKeyStroke("LEFT"), "moveLeft"); // Move piece left
-        actionMap.put("moveLeft", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tryMove(curPiece, curX - 1, curY);
-            }
-        });
 
-        inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight"); // Move piece right
-        actionMap.put("moveRight", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tryMove(curPiece, curX + 1, curY);
-            }
-        });
+        if (playerIndex == 0) {
+            inputMap.put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
+            actionMap.put("moveLeft", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece, curX - 1, curY);
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("DOWN"), "moveDown"); // Move piece down
-        actionMap.put("moveDown", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                oneLineDown();
-            }
-        });
+            inputMap.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
+            actionMap.put("moveRight", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece, curX + 1, curY);
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("UP"), "rotate"); //Rotate Piece by pressing 'up' key
-        actionMap.put("rotate", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                tryMove(curPiece.rotateRight(), curX, curY);
-            }
-        });
+            inputMap.put(KeyStroke.getKeyStroke("DOWN"), "moveDown");
+            actionMap.put("moveDown", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    oneLineDown();
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("SPACE"), "dropDown"); // Drop piece to bottom
-        actionMap.put("dropDown", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dropDown();
-            }
-        });
+            inputMap.put(KeyStroke.getKeyStroke("UP"), "rotate");
+            actionMap.put("rotate", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece.rotateRight(), curX, curY);
+                }
+            });
+        } else if (playerIndex == 1) {
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0), "moveLeft");
+            actionMap.put("moveLeft", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece, curX - 1, curY);
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("P"), "pause"); // Pause Game
-        actionMap.put("pause", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                pause();
-            }
-        });
+            inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0), "moveRight");
+            actionMap.put("moveRight", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece, curX + 1, curY);
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("M"), "music"); // toggles music on/off
-        actionMap.put("music", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                musicToggle();
-            }
-        });
+            inputMap.put(KeyStroke.getKeyStroke("SPACE"), "moveDown");
+            actionMap.put("moveDown", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    oneLineDown();
+                }
+            });
 
-        inputMap.put(KeyStroke.getKeyStroke("S"), "sounds"); // toggles sound effects on/off
-        actionMap.put("sounds", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                soundToggle();
-            }
-        });
-
+            inputMap.put(KeyStroke.getKeyStroke("L"), "rotate");
+            actionMap.put("rotate", new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tryMove(curPiece.rotateRight(), curX, curY);
+                }
+            });
+        }
     }
 
     private void makeAIMove() {

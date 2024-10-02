@@ -49,7 +49,7 @@ public class Score extends JPanel {
     }
 
     // Method to reset the score and lines cleared
-    public void reset() {
+    public static void reset() {
         linesCleared = 0;
         score = 0;
         currentLevel = MetaConfig.getInstance().getInitLevel();

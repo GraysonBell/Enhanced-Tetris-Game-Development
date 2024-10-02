@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 public class ConfigurePanel extends JPanel {
 
@@ -23,11 +22,9 @@ public class ConfigurePanel extends JPanel {
         add(titleLabel, BorderLayout.NORTH);
 
         // Main panel with GridLayout
-        JPanel mainPanel = new JPanel(new GridLayout(8, 3, 1, 1)); // Adjust the gaps if needed
+        JPanel mainPanel = new JPanel(new GridLayout(8, 3, 1, 1));
         mainPanel.setPreferredSize(new Dimension(800, 400));
-
-        // Add padding to mainPanel
-        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 0)); // Top, Left, Bottom, Right padding
+        mainPanel.setBorder(new EmptyBorder(20, 20, 20, 0));
         add(mainPanel, BorderLayout.CENTER);
 
         // Load configuration from MetaConfig
@@ -54,7 +51,6 @@ public class ConfigurePanel extends JPanel {
         JCheckBox musicCheckBox = createCheckBox(mainPanel, "Music (On/Off):");
         musicCheckBox.setSelected(config.isMusicOn());
 
-
         addLabel(mainPanel, "Sound Effects (On/Off):");
         JCheckBox soundEffectsCheckBox = createCheckBox(mainPanel, "Sound Effects (On/Off):");
         soundEffectsCheckBox.setSelected(config.isSoundOn());
@@ -78,17 +74,13 @@ public class ConfigurePanel extends JPanel {
         playerOneGroup.add(aiButton1);
         playerOneGroup.add(externalButton1);
 
-        // Set the initial selection for player one
-        humanButton1.setSelected(true); // Ensure the default is Human
-
-        // JLabel for displaying selected player one type
+        humanButton1.setSelected(true); // Default selection for Player One
         JLabel playerOneLabel = new JLabel("Selected: Human");
 
-        // Update action listener to reflect changes
+        // Action listener for Player One selection
         ActionListener playerOneListener = e -> {
             String selectedText = ((JRadioButton) e.getSource()).getText();
             playerOneLabel.setText("Selected: " + selectedText);
-            // Update the player type in the config
             if (selectedText.equals("Human")) {
                 config.setPlayerOneType(0);
             } else if (selectedText.equals("AI")) {
@@ -124,20 +116,18 @@ public class ConfigurePanel extends JPanel {
         playerTwoGroup.add(aiButton2);
         playerTwoGroup.add(externalButton2);
 
-        // Set the initial selection for player two based on extend mode
+        // Set the initial selection for Player Two based on Extend Mode
         playerTwoTypePanel.setVisible(config.isExtendMode());
         if (config.isExtendMode()) {
             humanButton2.setSelected(true); // Default to Human if Extend Mode is enabled
         }
 
-        // JLabel for displaying selected player two type
-        JLabel playerTwoLabel = new JLabel("Selected: Human"); // Default to Human
+        JLabel playerTwoLabel = new JLabel("Selected: Human");
 
-        // Action listener for player two selection
+        // Action listener for Player Two selection
         ActionListener playerTwoListener = e -> {
             String selectedText = ((JRadioButton) e.getSource()).getText();
             playerTwoLabel.setText("Selected: " + selectedText);
-            // Update the player type in the config
             if (selectedText.equals("Human")) {
                 config.setPlayerTwoType(0);
             } else if (selectedText.equals("AI")) {
@@ -155,10 +145,8 @@ public class ConfigurePanel extends JPanel {
         playerTwoTypePanel.add(aiButton2);
         playerTwoTypePanel.add(externalButton2);
 
-        // Initially hide Player Two options
         mainPanel.add(playerTwoTypePanel);
         mainPanel.add(playerTwoLabel);
-
 
         // Add ActionListener to Extend Mode checkbox
         extendModeCheckBox.addActionListener(e -> {
@@ -166,6 +154,13 @@ public class ConfigurePanel extends JPanel {
             playerTwoTypePanel.setVisible(isSelected);
             playerTwoLabel.setVisible(isSelected);
             config.setExtendMode(isSelected);
+            if (isSelected) {
+                humanButton2.setSelected(true); // Default to Human for Player Two
+                config.setPlayerTwoType(0); // Set Player Two type to Human
+            }
+            // Refresh the panel to ensure visibility changes are applied
+            mainPanel.revalidate();
+            mainPanel.repaint();
         });
 
         // Back Button
@@ -201,7 +196,6 @@ public class ConfigurePanel extends JPanel {
         JLabel label = new JLabel(" " + slider.getValue());
         slider.addChangeListener(e -> {
             label.setText(" " + slider.getValue());
-            // Update the MetaConfig instance as the slider value changes
             if (slider.getValueIsAdjusting()) {
                 return; // Prevent updating while adjusting
             }
@@ -218,20 +212,15 @@ public class ConfigurePanel extends JPanel {
 
     private JCheckBox createCheckBox(JPanel panel, String labelText) {
         JCheckBox checkBox = new JCheckBox();
-
-        // Initialize the checkbox based on config and update label accordingly
         boolean isChecked = (labelText.contains("Music") && MetaConfig.getInstance().isMusicOn()) ||
                 (labelText.contains("Sound Effects") && MetaConfig.getInstance().isSoundOn()) ||
                 (labelText.contains("Extend Mode") && MetaConfig.getInstance().isExtendMode());
 
         checkBox.setSelected(isChecked);
-
         JLabel label = new JLabel(isChecked ? "On" : "Off");
 
         checkBox.addActionListener(e -> {
-            // Update the label based on checkbox state
             label.setText(checkBox.isSelected() ? "On" : "Off");
-            // Update the MetaConfig instance based on checkbox state
             if (labelText.contains("Music")) {
                 MetaConfig.getInstance().setMusicOn(checkBox.isSelected());
                 Game.SoundHandler.setMusicOn(checkBox.isSelected());
@@ -247,5 +236,4 @@ public class ConfigurePanel extends JPanel {
         panel.add(label);
         return checkBox;
     }
-
 }

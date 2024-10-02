@@ -1,5 +1,3 @@
-/* I think this is done. This creates a JSON File that stores information from the Configure Panel that we can pull information from. */
-
 package model;
 
 import com.google.gson.Gson;
@@ -26,7 +24,7 @@ public class MetaConfig {
     private int playerTwoType = 0; // Corresponds to Human, AI, External
 
     // List of observers (UI components that need to be notified)
-    private static List<JComponent> observers = new ArrayList<>();
+    private static List<MetaConfigObserver> observers = new ArrayList<>();
 
     private MetaConfig() {}
 
@@ -42,27 +40,17 @@ public class MetaConfig {
     }
 
     // Observer methods
-    public static void addObserver(JComponent observer) {
+    public static void addObserver(MetaConfigObserver observer) {
         observers.add(observer);
     }
 
-    public static void removeObserver(JComponent observer) {
+    public static void removeObserver(MetaConfigObserver observer) {
         observers.remove(observer);
     }
 
     private static void notifyObservers() {
-        for (JComponent observer : observers) {
-            if (observer instanceof JLabel) {
-                JLabel label = (JLabel) observer;
-                if (label.getText().contains("Player type:")) {
-                    label.setText("Player type: " + instance.getPlayerType());
-                } else if (label.getText().contains("MUSIC:")) {
-                    label.setText("MUSIC: " + (instance.isMusicOn() ? "ON" : "OFF"));
-                } else if (label.getText().contains("SOUND:")) {
-                    label.setText("SOUND: " + (instance.isSoundOn() ? "ON" : "OFF"));
-                }
-            }
-            observer.repaint();
+        for (MetaConfigObserver observer : observers) {
+            observer.onExtendModeChanged(instance.isExtendMode());
         }
     }
 
@@ -145,7 +133,8 @@ public class MetaConfig {
 
     public void setExtendMode(boolean extendMode) {
         this.isExtendMode = extendMode;
-        saveConfigFile();
+        notifyObservers(); // Notify observers when extend mode changes
+        saveConfigFile(); // Save the change
     }
 
     public String getPlayerType() {
@@ -174,5 +163,10 @@ public class MetaConfig {
         this.playerTwoType = playerTwoType;
         notifyObservers();
         saveConfigFile();
+    }
+
+    // Observer interface for extend mode changes
+    public interface MetaConfigObserver {
+        void onExtendModeChanged(boolean extendMode);
     }
 }

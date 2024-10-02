@@ -23,7 +23,7 @@ public class MainFrame extends JFrame {
 
         // Create and add panels
         MainPanel mainPanel = new MainPanel();
-        playPanel = new PlayPanel(); // Initialize PlayPanel
+        playPanel = new PlayPanel(2); // Initialize PlayPanel
         ConfigurePanel configurePanel = new ConfigurePanel();
         HighScorePanel highScorePanel = new HighScorePanel();
 
